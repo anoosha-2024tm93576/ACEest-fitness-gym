@@ -56,21 +56,25 @@ programs = {
     }
 }
 
+
 @app.route('/')
 def home():
     return jsonify({
         "message": "ACEest Fitness API is running"
     })
 
+
 @app.route('/programs', methods=['GET'])
 def get_programs():
     return jsonify(list(programs.keys()))
 
+
 @app.route('/programs/<name>', methods=['GET'])
 def get_program(name):
     if name not in programs:
-        return jsonify({"error": "Program not found"}), 404
+        return jsonify({'error': 'Program not found'}), 404
     return jsonify(programs[name])
+
 
 @app.route('/clients', methods=['POST'])
 def save_client():
@@ -82,8 +86,8 @@ def save_client():
     adherence = data.get('adherence', 0)
 
     if not name or not program:
-        return jsonify({'error': 'Name and program are required'}), 400
-    
+        return jsonify({'error': 'name and program are required'}), 400
+
     if program not in programs:
         return jsonify({'error': 'Program not found'}), 404
 
@@ -101,6 +105,7 @@ def save_client():
         }
     })
 
+
 @app.route('/clients/reset', methods=['POST'])
 def reset_client():
     return jsonify({
@@ -114,6 +119,7 @@ def reset_client():
             'calories': None
         }
     })
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
