@@ -75,8 +75,8 @@ def get_program(name):
 @app.route('/clients', methods=['POST'])
 def save_client():
     data = request.get_json()
-    name = data.get('name').strip()
-    program = data.get('program').strip()
+    name = data.get('name', '').strip()
+    program = data.get('program', '').strip()
     age = data.get('age')
     weight = data.get('weight')
     adherence = data.get('adherence', 0)
