@@ -13,21 +13,21 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo 'Installing dependencies...'
-                sh 'pip install -r requirements.txt'
+                sh 'pip3 install -r requirements.txt'
             }
         }
 
         stage('Lint') {
             steps {
                 echo 'Running lint...'
-                sh 'pip install flake8 && flake8 app.py --max-line-length=120 --ignore=E501'
+                sh 'pip3 install flake8 && flake8 app.py --max-line-length=120 --ignore=E501'
             }
         }
 
         stage('Test') {
             steps {
                 echo 'Running tests...'
-                sh 'pytest -v'
+                sh 'python3 -m pytest -v'
             }
         }
 
