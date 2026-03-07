@@ -42,7 +42,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run tests
-        run: pytest test_app.py -v
+        run: pytest tests/test_app.py -v
 
   docker-build:
     name: Docker Build
@@ -67,4 +67,4 @@ jobs:
         run: docker build -t aceest-fitness:latest .
 
       - name: Run pytest inside container
-        run: docker run --rm aceest-fitness:latest pytest test_app.py -v
+        run: docker run --rm aceest-fitness:latest pytest tests/test_app.py -v
