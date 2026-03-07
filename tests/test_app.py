@@ -33,3 +33,39 @@ def test_get_invalid_program(client):
     assert res.status_code == 404
     data = res.get_json()
     assert 'error' in data
+
+def test_save_client(client):
+    res = client.post('/clients', json = {
+        'name': 'Harry',
+        'age': 28,
+        'weight': 47,
+        'program': 'Beginner (BG)',
+        'adherence': 80
+    })
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['client']['name'] == 'Harry'
+    assert data['client']['calories'] == 47 * 26
+
+def test_save_client_missing_name(client):
+    res = client.post('/clients', json = {
+        'program': 'Beginner (BG)'
+    })
+    assert res.status_code == 400
+    assert 'error' in res.get_json()
+
+def test_save_client_missing_program(client):
+    res = client.post('/clients', json = {
+        'name': 'Harry'
+    })
+    assert res.status_code == 400
+    assert 'error' in res.get_json()
+
+
+def test_reset_client(client):
+    res = client.post('/clients/reset')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['client']['name'] == ''
+    assert data['client']['adherence'] == 0
+    assert data['client']['calories'] is None
