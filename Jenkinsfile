@@ -13,14 +13,14 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 echo 'Installing dependencies...'
-                sh 'pip3 install -r requirements.txt'
+                sh 'pip3 install -r requirements.txt --break-system-packages'
             }
         }
 
         stage('Lint') {
             steps {
                 echo 'Running lint...'
-                sh 'pip3 install flake8 && flake8 app.py --max-line-length=120 --ignore=E501'
+                sh 'pip3 install flake8 --break-system-packages && python3 -m flake8 app.py --max-line-length=120 --ignore=E501'
             }
         }
 
