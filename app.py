@@ -87,7 +87,7 @@ def save_client():
     if program not in programs:
         return jsonify({'error': 'Program not found'}), 404
 
-    calories = int(weight * programs[program])['calorie_factor'] if weight else None
+    calories = int(weight * programs[program]['calorie_factor']) if weight else None
 
     return jsonify({
         'message': f'Client {name} saved successfully',
