@@ -61,6 +61,10 @@ programs = {
 clients = []
 
 
+def get_calories(weight, program):
+    return int(weight * programs[program]['calorie_factor'])
+
+
 @app.route('/')
 def home():
     return jsonify({
@@ -101,8 +105,6 @@ def save_client():
     if program not in programs:
         return jsonify({'error': 'Program not found'}), 404
 
-    calories = int(weight * programs[program]['calorie_factor']) if weight else None
-
     client = {
         'name': name,
         'age': age,
@@ -110,7 +112,7 @@ def save_client():
         'program': program,
         'adherence': adherence,
         'notes': notes,
-        'calories': calories
+        'calories': get_calories(weight, program) if weight else None
     }
 
     clients.append(client)
@@ -144,16 +146,16 @@ def export_clients():
 
     output = io.StringIO()
     writer = csv.DictWriter(
-        output, 
-        fieldnames = ['name', 'age', 'weight', 'program', 'adherence', 'notes', 'calories']
+        output,
+        fieldnames=['name', 'age', 'weight', 'program', 'adherence', 'notes', 'calories']
     )
     writer.writeheader()
     writer.writerows(clients)
 
     return Response(
         output.getvalue(),
-        mimetype = 'text/csv',
-        headers = {'Content-Disposition': 'attachment; filename=clients.csv'}
+        mimetype='text/csv',
+        headers={'Content-Disposition': 'attachment; filename=clients.csv'}
     )
 
 
