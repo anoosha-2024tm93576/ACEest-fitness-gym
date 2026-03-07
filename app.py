@@ -1,4 +1,6 @@
-from flask import Flask, jsonify, request
+from flask import Flask, Response, jsonify, request
+import csv
+import io
 
 app = Flask(__name__)
 
@@ -56,6 +58,8 @@ programs = {
     }
 }
 
+clients = []
+
 
 @app.route('/')
 def home():
@@ -76,6 +80,11 @@ def get_program(name):
     return jsonify(programs[name])
 
 
+@app.route('/clients', methods=['GET'])
+def get_clients():
+    return jsonify(clients)
+
+
 @app.route('/clients', methods=['POST'])
 def save_client():
     data = request.get_json()
@@ -84,6 +93,7 @@ def save_client():
     age = data.get('age')
     weight = data.get('weight')
     adherence = data.get('adherence', 0)
+    notes = data.get('notes', '').strip()
 
     if not name or not program:
         return jsonify({'error': 'name and program are required'}), 400
@@ -93,16 +103,21 @@ def save_client():
 
     calories = int(weight * programs[program]['calorie_factor']) if weight else None
 
+    client = {
+        'name': name,
+        'age': age,
+        'weight': weight,
+        'program': program,
+        'adherence': adherence,
+        'notes': notes,
+        'calories': calories
+    }
+
+    clients.append(client)
+
     return jsonify({
         'message': f'Client {name} saved successfully',
-        'client': {
-            'name': name,
-            'age': age,
-            'weight': weight,
-            'program': program,
-            'adherence': adherence,
-            'calories': calories
-        }
+        'client': client
     })
 
 
@@ -116,9 +131,30 @@ def reset_client():
             'weight': None,
             'program': '',
             'adherence': 0,
+            'notes': '',
             'calories': None
         }
     })
+
+
+@app.route('/clients/export', methods=['GET'])
+def export_clients():
+    if not clients:
+        return jsonify({'error': 'No clients to export'}), 400
+
+    output = io.StringIO()
+    writer = csv.DictWriter(
+        output, 
+        fieldnames = ['name', 'age', 'weight', 'program', 'adherence', 'notes', 'calories']
+    )
+    writer.writeheader()
+    writer.writerows(clients)
+
+    return Response(
+        output.getvalue(),
+        mimetype = 'text/csv',
+        headers = {'Content-Disposition': 'attachment; filename=clients.csv'}
+    )
 
 
 if __name__ == '__main__':
