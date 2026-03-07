@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 app = Flask(__name__)
 
@@ -19,6 +19,12 @@ programs = {
         "color": "#3498db"
     }
 }
+
+@app.route('/')
+def home():
+    return jsonify({
+        "message": "ACEest Fitness API is running"
+    })
 
 @app.route('/programs', methods=['GET'])
 def get_programs():
