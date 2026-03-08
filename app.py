@@ -255,5 +255,31 @@ def save_progress(name):
     })
 
 
+@app.route('/clients/<name>/progress/chart', methods=['GET'])
+def get_progress_chart(name):
+    conn = get_db()
+    client = conn.execute("SELECT * FROM clients WHERE name=?", (name,)).fetchone()
+
+    if not client:
+        conn.close()
+        return jsonify({'error': 'Client not found'}), 404
+
+    rows = conn.execute("""
+        SELECT week, adherence
+        FROM progress
+        WHERE client_name=?
+        ORDER BY id
+    """, (name,)).fetchall()
+    conn.close()
+
+    if not rows:
+        return jsonify({'error': 'No progress data available for this client'}), 404
+
+    return jsonify({
+        'client': name,
+        'chart_data': [{'week': r['week'], 'adherence': r['adherence']} for r in rows]
+    })
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
