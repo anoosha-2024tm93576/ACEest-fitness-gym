@@ -149,6 +149,11 @@ def save_client():
     conn.execute("""
         INSERT OR REPLACE INTO clients (name, age, weight, program, calories)
         VALUES (?, ?, ?, ?, ?)
+        ON CONFLICT(name) DO UPDATE SET
+            age=excluded.age,
+            weight=excluded.weight,
+            program=excluded.program,
+            calories=excluded.calories
     """, (name, age, weight, program, calories))
     conn.commit()
 
