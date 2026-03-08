@@ -9,17 +9,18 @@ def test_get_all_programs(client):
     assert res.status_code == 200
     data = res.get_json()
     assert isinstance(data, list)
-    assert len(data) == 3
+    assert len(data) == 4
 
 
 def test_get_valid_program(client):
-    res = client.get('/programs/Fat Loss (FL)')
+    res = client.get('/programs/Beginner (BG)')
     assert res.status_code == 200
     data = res.get_json()
     assert 'workout' in data
     assert 'diet' in data
     assert 'color' in data
     assert 'factor' in data
+    assert 'desc' in data
 
 
 def test_get_invalid_program(client):
@@ -38,9 +39,12 @@ def test_save_client(client):
     res = client.post('/clients', json={
         'name': 'John',
         'age': 25,
+        'height': 175,
         'weight': 70,
         'program': 'Beginner (BG)',
-        'adherence': 80
+        'adherence': 80,
+        'target_weight': 65,
+        'target_adherence': 90
     })
     assert res.status_code == 200
     data = res.get_json()
@@ -48,21 +52,21 @@ def test_save_client(client):
     assert data['client']['calories'] == 70 * 26
 
 
-def test_save_client_upsert(client):
-    client.post('/clients', json={'name': 'John', 'age': 25, 'weight': 70, 'program': 'Beginner (BG)'})
-    client.post('/clients', json={'name': 'John', 'age': 26, 'weight': 75, 'program': 'Muscle Gain (MG)'})
-    res = client.get('/clients')
-    assert len(res.get_json()) == 1
-
-
 def test_save_client_upsert_preserves_id(client):
     client.post('/clients', json={'name': 'John', 'age': 25, 'weight': 70, 'program': 'Beginner (BG)'})
     original_id = client.get('/clients/John').get_json()['id']
-    client.post('/clients', json={'name': 'John', 'age': 26, 'weight': 75, 'program': 'Muscle Gain (MG)'})
+    client.post('/clients', json={'name': 'John', 'age': 26, 'weight': 75, 'program': 'Muscle Gain (MG) - PPL'})
     updated = client.get('/clients/John').get_json()
     assert updated['id'] == original_id
     assert updated['age'] == 26
     assert updated['weight'] == 75
+
+
+def test_save_client_upsert(client):
+    client.post('/clients', json={'name': 'John', 'age': 25, 'weight': 70, 'program': 'Beginner (BG)'})
+    client.post('/clients', json={'name': 'John', 'age': 26, 'weight': 75, 'program': 'Muscle Gain (MG) - PPL'})
+    res = client.get('/clients')
+    assert len(res.get_json()) == 1
 
 
 def test_save_client_missing_name(client):
@@ -125,6 +129,24 @@ def test_get_progress(client):
     assert len(res.get_json()) == 2
 
 
+def test_get_progress_chart(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    client.post('/clients/John/progress', json={'adherence': 80})
+    client.post('/clients/John/progress', json={'adherence': 90})
+    res = client.get('/clients/John/progress/chart')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['client'] == 'John'
+    assert len(data['chart_data']) == 2
+
+
+def test_get_progress_chart_no_data(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/progress/chart')
+    assert res.status_code == 404
+    assert 'error' in res.get_json()
+
+
 def test_export_csv_no_clients(client):
     res = client.get('/clients/export')
     assert res.status_code == 400
@@ -142,27 +164,37 @@ def test_export_csv_with_clients(client):
     assert b'John' in res.data
 
 
-def test_get_progress_chart(client):
-    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
-    client.post('/clients/John/progress', json={'adherence': 80})
-    client.post('/clients/John/progress', json={'adherence': 90})
-    res = client.get('/clients/John/progress/chart')
+def test_get_summary(client):
+    client.post('/clients', json={'name': 'John', 'height': 175, 'weight': 70, 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/summary')
     assert res.status_code == 200
     data = res.get_json()
-    assert data['client'] == 'John'
-    assert len(data['chart_data']) == 2
-    assert 'week' in data['chart_data'][0]
-    assert 'adherence' in data['chart_data'][0]
+    assert 'client' in data
+    assert 'program_desc' in data
+    assert 'progress_summary' in data
+    assert 'last_metrics' in data
 
 
-def test_get_progress_chart_no_data(client):
+def test_get_summary_progress_stats(client):
     client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
-    res = client.get('/clients/John/progress/chart')
-    assert res.status_code == 404
-    assert 'error' in res.get_json()
+    client.post('/clients/John/progress', json={'adherence': 80})
+    client.post('/clients/John/progress', json={'adherence': 100})
+    res = client.get('/clients/John/summary')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['progress_summary']['weeks_logged'] == 2
+    assert data['progress_summary']['avg_adherence'] == 90.0
 
 
-def test_get_progress_chart_client_not_found(client):
-    res = client.get('/clients/NonExistent/progress/chart')
+def test_get_summary_no_progress(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/summary')
+    data = res.get_json()
+    assert data['progress_summary']['weeks_logged'] == 0
+    assert data['progress_summary']['avg_adherence'] == 0
+
+
+def test_get_summary_not_found(client):
+    res = client.get('/clients/NonExistent/summary')
     assert res.status_code == 404
     assert 'error' in res.get_json()

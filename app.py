@@ -9,7 +9,23 @@ app = Flask(__name__)
 DB_NAME = "aceest_fitness.db"
 
 PROGRAMS = {
-    "Fat Loss (FL)": {
+    "Fat Loss (FL) - 3 day": {
+        "workout": (
+            "Mon: Back Squat 5x5 + Core\n"
+            "Wed: Bench Press + 21-15-9\n"
+            "Fri: Zone 2 Cardio 30min"
+        ),
+        "diet": (
+            "Breakfast: Egg Whites + Oats\n"
+            "Lunch: Grilled Chicken + Brown Rice\n"
+            "Dinner: Fish Curry + Millet Roti\n"
+            "Target: ~2000 kcal"
+        ),
+        "color": "#e74c3c",
+        "factor": 22,
+        "desc": "3-day full-body fat loss"
+    },
+    "Fat Loss (FL) - 5 day": {
         "workout": (
             "Mon: Back Squat 5x5 + Core\n"
             "Tue: EMOM 20min Assault Bike\n"
@@ -21,12 +37,13 @@ PROGRAMS = {
             "Breakfast: Egg Whites + Oats\n"
             "Lunch: Grilled Chicken + Brown Rice\n"
             "Dinner: Fish Curry + Millet Roti\n"
-            "Target: ~2000 kcal"
+            "Target: ~2200 kcal"
         ),
-        "color": "#e74c3c",
-        "factor": 22
+        "color": "#c0392b",
+        "factor": 24,
+        "desc": "5-day split, higher volume fat loss"
     },
-    "Muscle Gain (MG)": {
+    "Muscle Gain (MG) - PPL": {
         "workout": (
             "Mon: Squat 5x5\n"
             "Tue: Bench 5x5\n"
@@ -42,7 +59,8 @@ PROGRAMS = {
             "Target: ~3200 kcal"
         ),
         "color": "#2ecc71",
-        "factor": 35
+        "factor": 35,
+        "desc": "Push/Pull/Legs hypertrophy"
     },
     "Beginner (BG)": {
         "workout": (
@@ -58,7 +76,8 @@ PROGRAMS = {
             "Protein Target: 120g/day"
         ),
         "color": "#3498db",
-        "factor": 26
+        "factor": 26,
+        "desc": "3-day simple beginner full-body"
     }
 }
 
@@ -77,9 +96,12 @@ def init_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT UNIQUE,
             age INTEGER,
+            height REAL,
             weight REAL,
             program TEXT,
-            calories INTEGER
+            calories INTEGER,
+            target_weight REAL,
+            target_adherence INTEGER
         )
     """)
     cur.execute("""
@@ -90,6 +112,29 @@ def init_db():
             adherence INTEGER
         )
     """)
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS exercises (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            workout_id INTEGER,
+            name TEXT,
+            sets INTEGER,
+            reps INTEGER,
+            weight REAL
+        )
+    """)
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS metrics (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            client_name TEXT,
+            date TEXT,
+            weight REAL,
+            waist REAL,
+            bodyfat REAL
+        )
+    """)
+
     conn.commit()
     conn.close()
 
@@ -134,8 +179,11 @@ def save_client():
     name = data.get('name', '').strip()
     program = data.get('program', '').strip()
     age = data.get('age')
+    height = data.get('height')
     weight = data.get('weight')
     adherence = data.get('adherence', 0)
+    target_weight = data.get('target_weight')
+    target_adherence = data.get('target_adherence')
 
     if not name or not program:
         return jsonify({'error': 'name and program are required'}), 400
@@ -147,14 +195,17 @@ def save_client():
 
     conn = get_db()
     conn.execute("""
-        INSERT OR REPLACE INTO clients (name, age, weight, program, calories)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT OR REPLACE INTO clients (name, age, height, weight, program, calories, target_weight, target_adherence)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(name) DO UPDATE SET
             age=excluded.age,
+            height=excluded.height,
             weight=excluded.weight,
             program=excluded.program,
-            calories=excluded.calories
-    """, (name, age, weight, program, calories))
+            calories=excluded.calories,
+            target_weight=excluded.target_weight,
+            target_adherence=excluded.target_adherence
+    """, (name, age, height, weight, program, calories, target_weight, target_adherence))
     conn.commit()
 
     if adherence:
@@ -172,10 +223,13 @@ def save_client():
         'client': {
             'name': name,
             'age': age,
+            'height': height,
             'weight': weight,
             'program': program,
             'adherence': adherence,
-            'calories': calories
+            'calories': calories,
+            'target_weight': target_weight,
+            'target_adherence': target_adherence
         }
     })
 
@@ -192,7 +246,7 @@ def export_clients():
     output = io.StringIO()
     writer = csv.DictWriter(
         output,
-        fieldnames=['id', 'name', 'age', 'weight', 'program', 'calories']
+        fieldnames=['id', 'name', 'age', 'height', 'weight', 'program', 'calories', 'target_weight', 'target_adherence']
     )
     writer.writeheader()
     writer.writerows([dict(c) for c in clients])
@@ -285,6 +339,38 @@ def get_progress_chart(name):
         'chart_data': [{'week': r['week'], 'adherence': r['adherence']} for r in rows]
     })
 
+
+@app.route('/clients/<name>/summary', methods=['GET'])
+def get_summary(name):
+    conn = get_db()
+    client = conn.execute("SELECT * FROM clients WHERE name=?", (name,)).fetchone()
+
+    if not client:
+        conn.close()
+        return jsonify({'error': 'Client not found'}), 404
+
+    total_weeks, avg_adherence = conn.execute("SELECT COUNT(*), AVG(adherence) FROM progress WHERE client_name=?", (name,)).fetchone()
+
+    last_metric = conn.execute("""
+        SELECT date, weight, waist, bodyfat FROM metrics
+        WHERE client_name=? ORDER BY date DESC LIMIT 1
+    """, (name,)).fetchone()
+
+    conn.close()
+
+    client_dict = dict(client)
+    program = client_dict.get('program', '')
+    program_desc = PROGRAMS.get(program, {}).get('desc', '')
+
+    return jsonify({
+        'client': client_dict,
+        'program_desc': program_desc,
+        'progress_summary': {
+            'weeks_logged': total_weeks,
+            'avg_adherence' : round(avg_adherence, 1) if avg_adherence else 0
+        },
+        'last_metrics': dict(last_metric) if last_metric else None
+    })
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
