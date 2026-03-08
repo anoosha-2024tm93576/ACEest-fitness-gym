@@ -50,15 +50,19 @@ def test_save_client(client):
     data = res.get_json()
     assert data['client']['name'] == 'John'
     assert data['client']['calories'] == 70 * 26
+    assert data['client']['height'] == 175
+    assert data['client']['target_weight'] == 65
+    assert data['client']['target_adherence'] == 90
 
 
 def test_save_client_upsert_preserves_id(client):
-    client.post('/clients', json={'name': 'John', 'age': 25, 'weight': 70, 'program': 'Beginner (BG)'})
+    client.post('/clients', json={'name': 'John', 'age': 25, 'height': 175, 'weight': 70, 'program': 'Beginner (BG)'})
     original_id = client.get('/clients/John').get_json()['id']
-    client.post('/clients', json={'name': 'John', 'age': 26, 'weight': 75, 'program': 'Muscle Gain (MG) - PPL'})
+    client.post('/clients', json={'name': 'John', 'age': 26, 'height': 180, 'weight': 75, 'program': 'Muscle Gain (MG) - PPL'})
     updated = client.get('/clients/John').get_json()
     assert updated['id'] == original_id
     assert updated['age'] == 26
+    assert updated['height'] == 180
     assert updated['weight'] == 75
 
 
@@ -88,10 +92,17 @@ def test_save_client_invalid_program(client):
 
 
 def test_load_client(client):
-    client.post('/clients', json={'name': 'John', 'age': 25, 'weight': 70, 'program': 'Beginner (BG)'})
+    client.post('/clients', json={
+        'name': 'John', 'age': 25, 'height': 175, 'weight': 70,
+        'program': 'Beginner (BG)', 'target_weight': 65, 'target_adherence': 90
+    })
     res = client.get('/clients/John')
     assert res.status_code == 200
-    assert res.get_json()['name'] == 'John'
+    data = res.get_json()
+    assert data['name'] == 'John'
+    assert data['height'] == 175
+    assert data['target_weight'] == 65
+    assert data['target_adherence'] == 90
 
 
 def test_load_client_not_found(client):
@@ -196,5 +207,37 @@ def test_get_summary_no_progress(client):
 
 def test_get_summary_not_found(client):
     res = client.get('/clients/NonExistent/summary')
+    assert res.status_code == 404
+    assert 'error' in res.get_json()
+
+
+def test_get_bmi_normal(client):
+    client.post('/clients', json={'name': 'John', 'height': 175, 'weight': 70, 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/bmi')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['bmi'] == 22.9
+    assert data['category'] == 'Normal'
+    assert 'risk' in data
+
+
+def test_get_bmi_categories(client):
+    client.post('/clients', json={'name': 'Under', 'height': 175, 'weight': 50, 'program': 'Beginner (BG)'})
+    client.post('/clients', json={'name': 'Over', 'height': 175, 'weight': 85, 'program': 'Beginner (BG)'})
+    client.post('/clients', json={'name': 'Obese', 'height': 175, 'weight': 110, 'program': 'Beginner (BG)'})
+    assert client.get('/clients/Under/bmi').get_json()['category'] == 'Underweight'
+    assert client.get('/clients/Over/bmi').get_json()['category'] == 'Overweight'
+    assert client.get('/clients/Obese/bmi').get_json()['category'] == 'Obese'
+
+
+def test_get_bmi_missing_data(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/bmi')
+    assert res.status_code == 400
+    assert 'error' in res.get_json()
+
+
+def test_get_bmi_not_found(client):
+    res = client.get('/clients/NonExistent/bmi')
     assert res.status_code == 404
     assert 'error' in res.get_json()

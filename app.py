@@ -372,5 +372,42 @@ def get_summary(name):
         'last_metrics': dict(last_metric) if last_metric else None
     })
 
+
+@app.route('/clients/<name>/bmi', methods=['GET'])
+def get_bmi(name):
+    conn = get_db()
+    client = conn.execute(
+        "SELECT height, weight FROM clients WHERE name=?", (name,)
+    ).fetchone()
+    conn.close()
+
+    if not client:
+        return jsonify({'error': 'Client not found'}), 404
+
+    height = client['height']
+    weight = client['weight']
+
+    if not height or not weight:
+        return jsonify({'error': 'Height and weight required for BMI calculation'}), 400
+
+    h_m = height / 100.0
+    bmi = round(weight / (h_m * h_m), 1)
+
+    if bmi < 18.5:
+        category = "Underweight"
+        risk = "Potential nutrient deficiency, low energy."
+    elif bmi < 25:
+        category = "Normal"
+        risk = "Low risk if active and strong."
+    elif bmi < 30:
+        category = "Overweight"
+        risk = "Moderate risk; focus on adherence and progressive activity."
+    else:
+        category = "Obese"
+        risk = "Higher risk; prioritize fat loss, consistency, and supervision."
+
+    return jsonify({'bmi': bmi, 'category': category, 'risk': risk})
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
