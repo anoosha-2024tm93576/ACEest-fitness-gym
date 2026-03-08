@@ -378,7 +378,7 @@ def get_summary(name):
         'program_desc': program_desc,
         'progress_summary': {
             'weeks_logged': total_weeks,
-            'avg_adherence' : round(avg_adherence, 1) if avg_adherence else 0
+            'avg_adherence': round(avg_adherence, 1) if avg_adherence else 0
         },
         'last_metrics': dict(last_metric) if last_metric else None
     })
