@@ -2,7 +2,7 @@ from flask import Flask, Response, jsonify, request
 import csv
 import io
 import sqlite3
-from datetime import datetime
+from datetime import datetime, date
 
 app = Flask(__name__)
 
@@ -132,6 +132,17 @@ def init_db():
             weight REAL,
             waist REAL,
             bodyfat REAL
+        )
+    """)
+
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS workouts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            client_name TEXT,
+            date TEXT,
+            workout_type TEXT,
+            duration_min INTEGER,
+            notes TEXT
         )
     """)
 
@@ -407,6 +418,70 @@ def get_bmi(name):
         risk = "Higher risk; prioritize fat loss, consistency, and supervision."
 
     return jsonify({'bmi': bmi, 'category': category, 'risk': risk})
+
+
+@app.route('/clients/<name>/workouts', methods=['POST'])
+def log_workout(name):
+    data = request.get_json()
+    workout_date = data.get('date', date.today().isoformat())
+    workout_type = data.get('workout_type', '').strip()
+    duration_min = data.get('duration_min')
+    notes = data.get('notes', '').strip()
+    exercises = data.get('exercises', [])
+
+    if not workout_type:
+        return jsonify({'error': 'workout_type is required'}), 400
+
+    conn = get_db()
+    client = conn.execute(
+        "SELECT * FROM clients WHERE name=?", (name,)
+    ).fetchone()
+
+    if not client:
+        conn.close()
+        return jsonify({'error': 'Client not found'}), 404
+
+    cur = conn.execute("""
+        INSERT INTO workouts (client_name, date, workout_type, duration_min, notes)
+        VALUES (?, ?, ?, ?, ?)
+    """, (name, workout_date, workout_type, duration_min, notes))
+    workout_id = cur.lastrowid
+
+    for ex in exercises:
+        conn.execute("""
+            INSERT INTO exercises (workout_id, name, sets, reps, weight)
+            VALUES (?, ?, ?, ?, ?)
+        """, (workout_id, ex.get('name'), ex.get('sets'),
+              ex.get('reps'), ex.get('weight')))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        'message': f'Workout logged for {name}',
+        'workout_id': workout_id,
+        'date': workout_date,
+        'workout_type': workout_type
+    })
+
+
+@app.route('/clients/<name>/workouts', methods=['GET'])
+def get_workouts(name):
+    conn = get_db()
+    client = conn.execute(
+        "SELECT * FROM clients WHERE name=?", (name,)
+    ).fetchone()
+
+    if not client:
+        conn.close()
+        return jsonify({'error': 'Client not found'}), 404
+
+    workouts = conn.execute("""
+        SELECT * FROM workouts WHERE client_name=? ORDER BY date DESC, id DESC
+    """, (name,)).fetchall()
+    conn.close()
+
+    return jsonify([dict(w) for w in workouts])
 
 
 if __name__ == '__main__':

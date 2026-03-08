@@ -241,3 +241,56 @@ def test_get_bmi_not_found(client):
     res = client.get('/clients/NonExistent/bmi')
     assert res.status_code == 404
     assert 'error' in res.get_json()
+
+
+def test_log_workout(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.post('/clients/John/workouts', json={
+        'date': '2026-03-08',
+        'workout_type': 'Strength',
+        'duration_min': 60,
+        'notes': 'Felt strong',
+        'exercises': [
+            {'name': 'Squat', 'sets': 5, 'reps': 5, 'weight': 100}
+        ]
+    })
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['workout_type'] == 'Strength'
+    assert data['date'] == '2026-03-08'
+    assert 'workout_id' in data
+
+
+def test_log_workout_missing_type(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.post('/clients/John/workouts', json={'date': '2026-03-08'})
+    assert res.status_code == 400
+    assert 'error' in res.get_json()
+
+
+def test_log_workout_client_not_found(client):
+    res = client.post('/clients/NonExistent/workouts', json={'workout_type': 'Strength'})
+    assert res.status_code == 404
+    assert 'error' in res.get_json()
+
+
+def test_get_workouts(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    client.post('/clients/John/workouts', json={'workout_type': 'Strength'})
+    client.post('/clients/John/workouts', json={'workout_type': 'Conditioning'})
+    res = client.get('/clients/John/workouts')
+    assert res.status_code == 200
+    assert len(res.get_json()) == 2
+
+
+def test_get_workouts_empty(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/workouts')
+    assert res.status_code == 200
+    assert res.get_json() == []
+
+
+def test_get_workouts_client_not_found(client):
+    res = client.get('/clients/NonExistent/workouts')
+    assert res.status_code == 404
+    assert 'error' in res.get_json()
