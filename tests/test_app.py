@@ -55,6 +55,16 @@ def test_save_client_upsert(client):
     assert len(res.get_json()) == 1
 
 
+def test_save_client_upsert_preserves_id(client):
+    client.post('/clients', json={'name': 'John', 'age': 25, 'weight': 70, 'program': 'Beginner (BG)'})
+    original_id = client.get('/clients/John').get_json()['id']
+    client.post('/clients', json={'name': 'John', 'age': 26, 'weight': 75, 'program': 'Muscle Gain (MG)'})
+    updated = client.get('/clients/John').get_json()
+    assert updated['id'] == original_id
+    assert updated['age'] == 26
+    assert updated['weight'] == 75
+
+
 def test_save_client_missing_name(client):
     res = client.post('/clients', json={'program': 'Beginner (BG)'})
     assert res.status_code == 400
