@@ -484,5 +484,60 @@ def get_workouts(name):
     return jsonify([dict(w) for w in workouts])
 
 
+@app.route('/clients/<name>/metrics', methods=['POST'])
+def log_metrics(name):
+    data = request.get_json()
+    metric_date = data.get('date', date.today().isoformat())
+    weight = data.get('weight')
+    waist = data.get('waist')
+    bodyfat = data.get('bodyfat')
+
+    if not metric_date:
+        return jsonify({'error': 'date is required'}), 400
+
+    conn = get_db()
+    client = conn.execute(
+        "SELECT * FROM clients WHERE name=?", (name,)
+    ).fetchone()
+
+    if not client:
+        conn.close()
+        return jsonify({'error': 'Client not found'}), 404
+
+    conn.execute("""
+        INSERT INTO metrics (client_name, date, weight, waist, bodyfat)
+        VALUES (?, ?, ?, ?, ?)
+    """, (name, metric_date, weight, waist, bodyfat))
+    conn.commit()
+    conn.close()
+
+    return jsonify({
+        'message': f'Metrics logged for {name}',
+        'date': metric_date,
+        'weight': weight,
+        'waist': waist,
+        'bodyfat': bodyfat
+    })
+
+
+@app.route('/clients/<name>/metrics', methods=['GET'])
+def get_metrics(name):
+    conn = get_db()
+    client = conn.execute(
+        "SELECT * FROM clients WHERE name=?", (name,)
+    ).fetchone()
+
+    if not client:
+        conn.close()
+        return jsonify({'error': 'Client not found'}), 404
+
+    metrics = conn.execute("""
+        SELECT * FROM metrics WHERE client_name=? ORDER BY date
+    """, (name,)).fetchall()
+    conn.close()
+
+    return jsonify([dict(m) for m in metrics])
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

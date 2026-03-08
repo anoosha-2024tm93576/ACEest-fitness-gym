@@ -294,3 +294,49 @@ def test_get_workouts_client_not_found(client):
     res = client.get('/clients/NonExistent/workouts')
     assert res.status_code == 404
     assert 'error' in res.get_json()
+
+
+def test_log_metrics(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.post('/clients/John/metrics', json={
+        'date': '2026-03-08',
+        'weight': 70,
+        'waist': 80,
+        'bodyfat': 15
+    })
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['weight'] == 70
+    assert data['waist'] == 80
+    assert data['bodyfat'] == 15
+
+
+def test_log_metrics_client_not_found(client):
+    res = client.post('/clients/NonExistent/metrics', json={'date': '2026-03-08', 'weight': 70})
+    assert res.status_code == 404
+    assert 'error' in res.get_json()
+
+
+def test_get_metrics(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    client.post('/clients/John/metrics', json={'date': '2026-03-01', 'weight': 72, 'waist': 82, 'bodyfat': 16})
+    client.post('/clients/John/metrics', json={'date': '2026-03-08', 'weight': 70, 'waist': 80, 'bodyfat': 15})
+    res = client.get('/clients/John/metrics')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert len(data) == 2
+    assert data[0]['date'] == '2026-03-01'
+    assert data[1]['date'] == '2026-03-08'
+
+
+def test_get_metrics_empty(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/metrics')
+    assert res.status_code == 200
+    assert res.get_json() == []
+
+
+def test_get_metrics_client_not_found(client):
+    res = client.get('/clients/NonExistent/metrics')
+    assert res.status_code == 404
+    assert 'error' in res.get_json()
