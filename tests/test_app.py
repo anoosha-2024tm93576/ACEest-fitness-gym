@@ -340,3 +340,29 @@ def test_get_metrics_client_not_found(client):
     res = client.get('/clients/NonExistent/metrics')
     assert res.status_code == 404
     assert 'error' in res.get_json()
+
+
+def test_get_weight_chart(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    client.post('/clients/John/metrics', json={'date': '2026-03-01', 'weight': 72})
+    client.post('/clients/John/metrics', json={'date': '2026-03-08', 'weight': 70})
+    res = client.get('/clients/John/metrics/chart')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['client'] == 'John'
+    assert len(data['chart_data']) == 2
+    assert data['chart_data'][0] == {'date': '2026-03-01', 'weight': 72}
+    assert data['chart_data'][1] == {'date': '2026-03-08', 'weight': 70}
+
+
+def test_get_weight_chart_no_data(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/metrics/chart')
+    assert res.status_code == 404
+    assert 'error' in res.get_json()
+
+
+def test_get_weight_chart_client_not_found(client):
+    res = client.get('/clients/NonExistent/metrics/chart')
+    assert res.status_code == 404
+    assert 'error' in res.get_json()

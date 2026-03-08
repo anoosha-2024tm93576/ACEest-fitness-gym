@@ -539,5 +539,31 @@ def get_metrics(name):
     return jsonify([dict(m) for m in metrics])
 
 
+@app.route('/clients/<name>/metrics/chart', methods=['GET'])
+def get_metrics_chart(name):
+    conn = get_db()
+    client = conn.execute(
+        "SELECT * FROM clients WHERE name=?", (name,)
+    ).fetchone()
+
+    if not client:
+        conn.close()
+        return jsonify({'error': 'Client not found'}), 404
+
+    rows = conn.execute("""
+        SELECT date, weight FROM metrics
+        WHERE client_name=? AND weight IS NOT NULL ORDER BY date
+    """, (name,)).fetchall()
+    conn.close()
+
+    if not rows:
+        return jsonify({'error': 'No weight metrics available for this client'}), 404
+
+    return jsonify({
+        'client': name,
+        'chart_data': [{'date': r['date'], 'weight': r['weight']} for r in rows]
+    })
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
