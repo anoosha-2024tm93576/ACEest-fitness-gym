@@ -130,3 +130,29 @@ def test_export_csv_with_clients(client):
     assert res.status_code == 200
     assert res.content_type == 'text/csv; charset=utf-8'
     assert b'John' in res.data
+
+
+def test_get_progress_chart(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    client.post('/clients/John/progress', json={'adherence': 80})
+    client.post('/clients/John/progress', json={'adherence': 90})
+    res = client.get('/clients/John/progress/chart')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['client'] == 'John'
+    assert len(data['chart_data']) == 2
+    assert 'week' in data['chart_data'][0]
+    assert 'adherence' in data['chart_data'][0]
+
+
+def test_get_progress_chart_no_data(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/progress/chart')
+    assert res.status_code == 404
+    assert 'error' in res.get_json()
+
+
+def test_get_progress_chart_client_not_found(client):
+    res = client.get('/clients/NonExistent/progress/chart')
+    assert res.status_code == 404
+    assert 'error' in res.get_json()
