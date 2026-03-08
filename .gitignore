@@ -1,3 +1,15 @@
+# Python
 __pycache__/
 *.pyc
+*.pyd
+*.pyo
+
+# Database
+*.db
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Pytest
 .pytest_cache/
