@@ -1,3 +1,4 @@
+import sqlite3
 import pytest
 import os
 import sys
@@ -15,8 +16,12 @@ def setup_test_db():
     app_module.init_db()
     yield
     app_module.DB_NAME = "aceest_fitness.db"
+    sqlite3.connect(TEST_DB).close()
     if os.path.exists(TEST_DB):
-        os.remove(TEST_DB)
+        try:
+            os.remove(TEST_DB)
+        except PermissionError:
+            pass
 
 
 @pytest.fixture

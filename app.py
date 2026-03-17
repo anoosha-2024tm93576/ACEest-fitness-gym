@@ -92,6 +92,17 @@ def init_db():
     conn = get_db()
     cur = conn.cursor()
     cur.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE,
+            password TEXT,
+            role TEXT
+        )
+    """)
+    cur.execute(
+        "INSERT OR IGNORE INTO users (username, password, role) VALUES ('admin', 'admin', 'Admin')"
+    )
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS clients (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT UNIQUE,
@@ -101,7 +112,8 @@ def init_db():
             program TEXT,
             calories INTEGER,
             target_weight REAL,
-            target_adherence INTEGER
+            target_adherence INTEGER,
+            membership_expiry TEXT
         )
     """)
     cur.execute("""
@@ -195,6 +207,7 @@ def save_client():
     adherence = data.get('adherence', 0)
     target_weight = data.get('target_weight')
     target_adherence = data.get('target_adherence')
+    membership_expiry = data.get('membership_expiry')
 
     if not name or not program:
         return jsonify({'error': 'name and program are required'}), 400
@@ -206,8 +219,8 @@ def save_client():
 
     conn = get_db()
     conn.execute("""
-        INSERT OR REPLACE INTO clients (name, age, height, weight, program, calories, target_weight, target_adherence)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT OR REPLACE INTO clients (name, age, height, weight, program, calories, target_weight, target_adherence, membership_expiry)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(name) DO UPDATE SET
             age=excluded.age,
             height=excluded.height,
@@ -215,8 +228,9 @@ def save_client():
             program=excluded.program,
             calories=excluded.calories,
             target_weight=excluded.target_weight,
-            target_adherence=excluded.target_adherence
-    """, (name, age, height, weight, program, calories, target_weight, target_adherence))
+            target_adherence=excluded.target_adherence,
+            membership_expiry=excluded.membership_expiry
+    """, (name, age, height, weight, program, calories, target_weight, target_adherence, membership_expiry))
     conn.commit()
 
     if adherence:
@@ -240,7 +254,8 @@ def save_client():
             'adherence': adherence,
             'calories': calories,
             'target_weight': target_weight,
-            'target_adherence': target_adherence
+            'target_adherence': target_adherence,
+            'membership_expiry': membership_expiry
         }
     })
 
@@ -257,7 +272,7 @@ def export_clients():
     output = io.StringIO()
     writer = csv.DictWriter(
         output,
-        fieldnames=['id', 'name', 'age', 'height', 'weight', 'program', 'calories', 'target_weight', 'target_adherence']
+        fieldnames=['id', 'name', 'age', 'height', 'weight', 'program', 'calories', 'target_weight', 'target_adherence', 'membership_expiry']
     )
     writer.writeheader()
     writer.writerows([dict(c) for c in clients])
@@ -563,6 +578,50 @@ def get_metrics_chart(name):
         'client': name,
         'chart_data': [{'date': r['date'], 'weight': r['weight']} for r in rows]
     })
+
+
+@app.route('/auth/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    username = data.get('username', '').strip()
+    password = data.get('password', '').strip()
+    role = data.get('role', 'Trainer').strip()
+
+    if not username or not password:
+        return jsonify({'error': 'username and password are required'}), 400
+
+    conn = get_db()
+    try:
+        conn.execute("""
+            INSERT INTO users (username, password, role) VALUES (?, ?, ?)
+        """, (username, password, role))
+
+        conn.commit()
+        conn.close()
+
+        return jsonify({'message': f'User {username} registered successfully', 'role':role})
+    except sqlite3.IntegrityError:
+        conn.close()
+        return jsonify({'error':'Username already exists'}), 409
+
+
+@app.route('/auth/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    username = data.get('username','').strip()
+    password = data.get('password','').strip()
+
+    if not username or not password:
+        return jsonify({'error': 'username and password are required'}), 400
+
+    conn = get_db()
+    user = conn.execute("SELECT username, role FROM users WHERE username=? AND password=?", (username,password)).fetchone()
+    conn.close()
+
+    if not user:
+        return jsonify({'error': 'Invalid credentials'}), 401
+
+    return jsonify({'message': f'Welcome {username}', 'username':user['username'], 'role': user['role']})
 
 
 if __name__ == '__main__':
