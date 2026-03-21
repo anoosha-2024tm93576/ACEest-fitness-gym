@@ -114,7 +114,8 @@ def init_db():
             calories INTEGER,
             target_weight REAL,
             target_adherence INTEGER,
-            membership_expiry TEXT
+            membership_status TEXT,
+            membership_end TEXT
         )
     """)
     cur.execute("""
@@ -208,7 +209,8 @@ def save_client():
     adherence = data.get('adherence', 0)
     target_weight = data.get('target_weight')
     target_adherence = data.get('target_adherence')
-    membership_expiry = data.get('membership_expiry')
+    membership_status = data.get('membership_status', 'Active').strip()
+    membership_end = data.get('membership_end', '').strip() or None
 
     if not name or not program:
         return jsonify({'error': 'name and program are required'}), 400
@@ -220,8 +222,8 @@ def save_client():
 
     conn = get_db()
     conn.execute("""
-        INSERT OR REPLACE INTO clients (name, age, height, weight, program, calories, target_weight, target_adherence, membership_expiry)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT OR REPLACE INTO clients (name, age, height, weight, program, calories, target_weight, target_adherence, membership_status, membership_end)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(name) DO UPDATE SET
             age=excluded.age,
             height=excluded.height,
@@ -230,8 +232,9 @@ def save_client():
             calories=excluded.calories,
             target_weight=excluded.target_weight,
             target_adherence=excluded.target_adherence,
-            membership_expiry=excluded.membership_expiry
-    """, (name, age, height, weight, program, calories, target_weight, target_adherence, membership_expiry))
+            membership_status=excluded.membership_status,
+            membership_end=excluded.membership_end
+    """, (name, age, height, weight, program, calories, target_weight, target_adherence, membership_status, membership_end))
     conn.commit()
 
     if adherence:
@@ -256,7 +259,8 @@ def save_client():
             'calories': calories,
             'target_weight': target_weight,
             'target_adherence': target_adherence,
-            'membership_expiry': membership_expiry
+            'membership_status': membership_status,
+            'membership_end': membership_end
         }
     })
 
@@ -273,7 +277,7 @@ def export_clients():
     output = io.StringIO()
     writer = csv.DictWriter(
         output,
-        fieldnames=['id', 'name', 'age', 'height', 'weight', 'program', 'calories', 'target_weight', 'target_adherence', 'membership_expiry']
+        fieldnames=['id', 'name', 'age', 'height', 'weight', 'program', 'calories', 'target_weight', 'target_adherence', 'membership_status', 'membership_end']
     )
     writer.writeheader()
     writer.writerows([dict(c) for c in clients])
@@ -689,6 +693,24 @@ def generate_program(name):
         'exp_level': exp_level,
         'focus': focus,
         'schedule': schedule
+    })
+
+
+@app.route('/clients/<name>/membership', methods=['GET'])
+def get_membership(name):
+    conn = get_db()
+    client = conn.execute(
+        "SELECT membership_status, membership_end FROM clients WHERE name=?", (name,)
+    ).fetchone()
+    conn.close()
+
+    if not client:
+        return jsonify({'error': 'Client not found'}), 404
+
+    return jsonify({
+        'client': name,
+        'membership_status': client['membership_status'],
+        'membership_end': client['membership_end']
     })
 
 
