@@ -192,7 +192,7 @@ Available programs: `Fat Loss (FL) - 3 day`, `Fat Loss (FL) - 5 day`, `Muscle Ga
 
 | Table | Key Columns |
 |-------|-------------|
-| `users` | id, username, password, role |
+| `users` | username, password, role |
 | `clients` | id, name, age, height, weight, program, calories, target_weight, target_adherence, membership_status, membership_end |
 | `progress` | id, client_name, week, adherence |
 | `workouts` | id, client_name, date, workout_type, duration_min, notes |
