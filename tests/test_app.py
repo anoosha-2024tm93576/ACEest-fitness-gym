@@ -414,3 +414,52 @@ def test_login_missing_fields(client):
     res = client.post('/auth/login', json={'username': 'admin'})
     assert res.status_code == 400
     assert 'error' in res.get_json()
+
+
+def test_generate_program_beginner(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/program/generate?exp_level=beginner')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['client'] == 'John'
+    assert data['exp_level'] == 'beginner'
+    assert data['focus'] == 'Full Body'
+    assert len(data['schedule']) == 9 
+ 
+ 
+def test_generate_program_intermediate(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Fat Loss (FL) - 3 day'})
+    res = client.get('/clients/John/program/generate?exp_level=intermediate')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['focus'] == 'Conditioning'
+    assert len(data['schedule']) == 16
+ 
+ 
+def test_generate_program_advanced(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Muscle Gain (MG) - PPL'})
+    res = client.get('/clients/John/program/generate?exp_level=advanced')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['focus'] == 'Hypertrophy'
+    assert len(data['schedule']) == 20 
+ 
+ 
+def test_generate_program_invalid_exp_level(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/program/generate?exp_level=expert')
+    assert res.status_code == 400
+    assert 'error' in res.get_json()
+ 
+ 
+def test_generate_program_missing_exp_level(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/program/generate')
+    assert res.status_code == 400
+    assert 'error' in res.get_json()
+ 
+ 
+def test_generate_program_client_not_found(client):
+    res = client.get('/clients/NonExistent/program/generate?exp_level=beginner')
+    assert res.status_code == 404
+    assert 'error' in res.get_json()

@@ -3,6 +3,7 @@ import csv
 import io
 import sqlite3
 from datetime import datetime, date
+import random
 
 app = Flask(__name__)
 
@@ -622,6 +623,73 @@ def login():
         return jsonify({'error': 'Invalid credentials'}), 401
 
     return jsonify({'message': f'Welcome {username}', 'username':user['username'], 'role': user['role']})
+
+
+@app.route('/clients/<name>/program/generate', methods=['GET'])
+def generate_program(name):
+    exp_level = request.args.get('exp_level', '').strip().lower()
+
+    if exp_level not in ['beginner', 'intermediate', 'advanced']:
+        return jsonify({'error': 'exp_level must be beginner, intermediate or advanced'}), 400
+
+    conn = get_db()
+    client = conn.execute(
+        "SELECT program FROM clients WHERE name=?", (name,)
+    ).fetchone()
+    conn.close()
+ 
+    if not client:
+        return jsonify({'error': 'Client not found'}), 404
+ 
+    program_name = client['program']
+ 
+    exercises_pool = {
+        'Strength': ['Squat', 'Deadlift', 'Bench Press', 'Overhead Press', 'Pull-Up', 'Barbell Row'],
+        'Hypertrophy': ['Leg Press', 'Incline Dumbbell Press', 'Lat Pulldown',
+                        'Lateral Raise', 'Bicep Curl', 'Tricep Extension'],
+        'Conditioning': ['Running', 'Cycling', 'Rowing', 'Burpees', 'Jump Rope', 'Kettlebell Swings'],
+        'Full Body': ['Push-Up', 'Pull-Up', 'Lunge', 'Plank', 'Dumbbell Row', 'Dumbbell Press'],
+    }
+ 
+    if 'Fat Loss' in program_name:
+        focus = 'Conditioning'
+    elif 'Muscle Gain' in program_name:
+        focus = 'Hypertrophy'
+    else:
+        focus = 'Full Body'
+ 
+    if exp_level == 'beginner':
+        sets_range = (2, 3)
+        reps_range = (8, 12)
+        days = 3
+    elif exp_level == 'intermediate':
+        sets_range = (3, 4)
+        reps_range = (8, 15)
+        days = 4
+    else:
+        sets_range = (4, 5)
+        reps_range = (6, 15)
+        days = 5
+ 
+    weekly_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][:days]
+    schedule = []
+    for day in weekly_days:
+        exercises = random.sample(exercises_pool[focus], k=3 if days < 4 else 4)
+        for ex in exercises:
+            schedule.append({
+                'day': day,
+                'exercise': ex,
+                'sets': random.randint(*sets_range),
+                'reps': random.randint(*reps_range)
+            })
+ 
+    return jsonify({
+        'client': name,
+        'program': program_name,
+        'exp_level': exp_level,
+        'focus': focus,
+        'schedule': schedule
+    })
 
 
 if __name__ == '__main__':
