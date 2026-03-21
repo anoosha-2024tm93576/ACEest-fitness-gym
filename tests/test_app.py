@@ -45,7 +45,8 @@ def test_save_client(client):
         'adherence': 80,
         'target_weight': 65,
         'target_adherence': 90,
-        'membership_expiry': '2026-12-31'
+        'membership_status': 'Active',
+        'membership_end': '2026-12-31'
     })
     assert res.status_code == 200
     data = res.get_json()
@@ -54,7 +55,8 @@ def test_save_client(client):
     assert data['client']['height'] == 175
     assert data['client']['target_weight'] == 65
     assert data['client']['target_adherence'] == 90
-    assert data['client']['membership_expiry'] == '2026-12-31'
+    assert data['client']['membership_status'] == 'Active'
+    assert data['client']['membership_end'] == '2026-12-31'
 
 
 def test_save_client_upsert_preserves_id(client):
@@ -97,7 +99,7 @@ def test_load_client(client):
     client.post('/clients', json={
         'name': 'John', 'age': 25, 'height': 175, 'weight': 70,
         'program': 'Beginner (BG)', 'target_weight': 65, 'target_adherence': 90,
-        'membership_expiry': '2026-12-31'
+        'membership_status': 'Active', 'membership_end': '2026-12-31'
     })
     res = client.get('/clients/John')
     assert res.status_code == 200
@@ -106,7 +108,8 @@ def test_load_client(client):
     assert data['height'] == 175
     assert data['target_weight'] == 65
     assert data['target_adherence'] == 90
-    assert data['membership_expiry'] == '2026-12-31'
+    assert data['membership_status'] == 'Active'
+    assert data['membership_end'] == '2026-12-31'
 
 
 def test_load_client_not_found(client):
@@ -171,12 +174,14 @@ def test_export_csv_no_clients(client):
 def test_export_csv_with_clients(client):
     client.post('/clients', json={
         'name': 'John', 'age': 25, 'weight': 70,
-        'program': 'Beginner (BG)', 'adherence': 80
+        'program': 'Beginner (BG)', 'adherence': 80,
+        'membership_status': 'Active', 'membership_end': '2026-12-31'
     })
     res = client.get('/clients/export')
     assert res.status_code == 200
     assert res.content_type == 'text/csv; charset=utf-8'
     assert b'John' in res.data
+    assert b'membership_status' in res.data
 
 
 def test_get_summary(client):
