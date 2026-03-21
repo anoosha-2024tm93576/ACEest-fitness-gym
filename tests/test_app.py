@@ -44,7 +44,8 @@ def test_save_client(client):
         'program': 'Beginner (BG)',
         'adherence': 80,
         'target_weight': 65,
-        'target_adherence': 90
+        'target_adherence': 90,
+        'membership_expiry': '2026-12-31'
     })
     assert res.status_code == 200
     data = res.get_json()
@@ -53,6 +54,7 @@ def test_save_client(client):
     assert data['client']['height'] == 175
     assert data['client']['target_weight'] == 65
     assert data['client']['target_adherence'] == 90
+    assert data['client']['membership_expiry'] == '2026-12-31'
 
 
 def test_save_client_upsert_preserves_id(client):
@@ -94,7 +96,8 @@ def test_save_client_invalid_program(client):
 def test_load_client(client):
     client.post('/clients', json={
         'name': 'John', 'age': 25, 'height': 175, 'weight': 70,
-        'program': 'Beginner (BG)', 'target_weight': 65, 'target_adherence': 90
+        'program': 'Beginner (BG)', 'target_weight': 65, 'target_adherence': 90,
+        'membership_expiry': '2026-12-31'
     })
     res = client.get('/clients/John')
     assert res.status_code == 200
@@ -103,6 +106,7 @@ def test_load_client(client):
     assert data['height'] == 175
     assert data['target_weight'] == 65
     assert data['target_adherence'] == 90
+    assert data['membership_expiry'] == '2026-12-31'
 
 
 def test_load_client_not_found(client):
@@ -364,5 +368,98 @@ def test_get_weight_chart_no_data(client):
 
 def test_get_weight_chart_client_not_found(client):
     res = client.get('/clients/NonExistent/metrics/chart')
+    assert res.status_code == 404
+    assert 'error' in res.get_json()
+
+
+def test_register_user(client):
+    res = client.post('/auth/register', json={
+        'username': 'trainer1',
+        'password': 'pass123',
+        'role': 'Trainer'
+    })
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['role'] == 'Trainer'
+
+
+def test_register_duplicate_username(client):
+    client.post('/auth/register', json={'username': 'trainer1', 'password': 'pass123', 'role': 'Trainer'})
+    res = client.post('/auth/register', json={'username': 'trainer1', 'password': 'pass456', 'role': 'Trainer'})
+    assert res.status_code == 409
+    assert 'error' in res.get_json()
+
+
+def test_register_missing_fields(client):
+    res = client.post('/auth/register', json={'username': 'trainer1'})
+    assert res.status_code == 400
+    assert 'error' in res.get_json()
+
+
+def test_login_success(client):
+    res = client.post('/auth/login', json={'username': 'admin', 'password': 'admin'})
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['username'] == 'admin'
+    assert data['role'] == 'Admin'
+
+
+def test_login_invalid_credentials(client):
+    res = client.post('/auth/login', json={'username': 'admin', 'password': 'wrongpass'})
+    assert res.status_code == 401
+    assert 'error' in res.get_json()
+
+
+def test_login_missing_fields(client):
+    res = client.post('/auth/login', json={'username': 'admin'})
+    assert res.status_code == 400
+    assert 'error' in res.get_json()
+
+
+def test_generate_program_beginner(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/program/generate?exp_level=beginner')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['client'] == 'John'
+    assert data['exp_level'] == 'beginner'
+    assert data['focus'] == 'Full Body'
+    assert len(data['schedule']) == 9 
+ 
+ 
+def test_generate_program_intermediate(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Fat Loss (FL) - 3 day'})
+    res = client.get('/clients/John/program/generate?exp_level=intermediate')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['focus'] == 'Conditioning'
+    assert len(data['schedule']) == 16
+ 
+ 
+def test_generate_program_advanced(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Muscle Gain (MG) - PPL'})
+    res = client.get('/clients/John/program/generate?exp_level=advanced')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['focus'] == 'Hypertrophy'
+    assert len(data['schedule']) == 20 
+ 
+ 
+def test_generate_program_invalid_exp_level(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/program/generate?exp_level=expert')
+    assert res.status_code == 400
+    assert 'error' in res.get_json()
+ 
+ 
+def test_generate_program_missing_exp_level(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/program/generate')
+    assert res.status_code == 400
+    assert 'error' in res.get_json()
+ 
+ 
+def test_generate_program_client_not_found(client):
+    res = client.get('/clients/NonExistent/program/generate?exp_level=beginner')
     assert res.status_code == 404
     assert 'error' in res.get_json()
