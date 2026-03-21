@@ -600,29 +600,29 @@ def register():
         conn.commit()
         conn.close()
 
-        return jsonify({'message': f'User {username} registered successfully', 'role':role})
+        return jsonify({'message': f'User {username} registered successfully', 'role': role})
     except sqlite3.IntegrityError:
         conn.close()
-        return jsonify({'error':'Username already exists'}), 409
+        return jsonify({'error': 'Username already exists'}), 409
 
 
 @app.route('/auth/login', methods=['POST'])
 def login():
     data = request.get_json()
-    username = data.get('username','').strip()
-    password = data.get('password','').strip()
+    username = data.get('username', '').strip()
+    password = data.get('password', '').strip()
 
     if not username or not password:
         return jsonify({'error': 'username and password are required'}), 400
 
     conn = get_db()
-    user = conn.execute("SELECT username, role FROM users WHERE username=? AND password=?", (username,password)).fetchone()
+    user = conn.execute("SELECT username, role FROM users WHERE username=? AND password=?", (username, password)).fetchone()
     conn.close()
 
     if not user:
         return jsonify({'error': 'Invalid credentials'}), 401
 
-    return jsonify({'message': f'Welcome {username}', 'username':user['username'], 'role': user['role']})
+    return jsonify({'message': f'Welcome {username}', 'username': user['username'], 'role': user['role']})
 
 
 @app.route('/clients/<name>/program/generate', methods=['GET'])
@@ -637,12 +637,12 @@ def generate_program(name):
         "SELECT program FROM clients WHERE name=?", (name,)
     ).fetchone()
     conn.close()
- 
+
     if not client:
         return jsonify({'error': 'Client not found'}), 404
- 
+
     program_name = client['program']
- 
+
     exercises_pool = {
         'Strength': ['Squat', 'Deadlift', 'Bench Press', 'Overhead Press', 'Pull-Up', 'Barbell Row'],
         'Hypertrophy': ['Leg Press', 'Incline Dumbbell Press', 'Lat Pulldown',
@@ -650,14 +650,14 @@ def generate_program(name):
         'Conditioning': ['Running', 'Cycling', 'Rowing', 'Burpees', 'Jump Rope', 'Kettlebell Swings'],
         'Full Body': ['Push-Up', 'Pull-Up', 'Lunge', 'Plank', 'Dumbbell Row', 'Dumbbell Press'],
     }
- 
+
     if 'Fat Loss' in program_name:
         focus = 'Conditioning'
     elif 'Muscle Gain' in program_name:
         focus = 'Hypertrophy'
     else:
         focus = 'Full Body'
- 
+
     if exp_level == 'beginner':
         sets_range = (2, 3)
         reps_range = (8, 12)
@@ -670,7 +670,7 @@ def generate_program(name):
         sets_range = (4, 5)
         reps_range = (6, 15)
         days = 5
- 
+
     weekly_days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][:days]
     schedule = []
     for day in weekly_days:
@@ -682,7 +682,7 @@ def generate_program(name):
                 'sets': random.randint(*sets_range),
                 'reps': random.randint(*reps_range)
             })
- 
+
     return jsonify({
         'client': name,
         'program': program_name,
