@@ -468,3 +468,29 @@ def test_generate_program_client_not_found(client):
     res = client.get('/clients/NonExistent/program/generate?exp_level=beginner')
     assert res.status_code == 404
     assert 'error' in res.get_json()
+
+
+def test_get_membership(client):
+    client.post('/clients', json={
+        'name': 'John', 'program': 'Beginner (BG)',
+        'membership_status': 'Active', 'membership_end': '2026-12-31'
+    })
+    res = client.get('/clients/John/membership')
+    assert res.status_code == 200
+    data = res.get_json()
+    assert data['client'] == 'John'
+    assert data['membership_status'] == 'Active'
+    assert data['membership_end'] == '2026-12-31'
+ 
+ 
+def test_get_membership_default_status(client):
+    client.post('/clients', json={'name': 'John', 'program': 'Beginner (BG)'})
+    res = client.get('/clients/John/membership')
+    assert res.status_code == 200
+    assert res.get_json()['membership_status'] == 'Active'
+ 
+ 
+def test_get_membership_client_not_found(client):
+    res = client.get('/clients/NonExistent/membership')
+    assert res.status_code == 404
+    assert 'error' in res.get_json()

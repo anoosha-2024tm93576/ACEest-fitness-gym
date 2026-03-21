@@ -696,5 +696,23 @@ def generate_program(name):
     })
 
 
+@app.route('/clients/<name>/membership', methods=['GET'])
+def get_membership(name):
+    conn = get_db()
+    client = conn.execute(
+        "SELECT membership_status, membership_end FROM clients WHERE name=?", (name,)
+    ).fetchone()
+    conn.close()
+
+    if not client:
+        return jsonify({'error': 'Client not found'}), 404
+
+    return jsonify({
+        'client': name,
+        'membership_status': client['membership_status'],
+        'membership_end': client['membership_end']
+    })
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
