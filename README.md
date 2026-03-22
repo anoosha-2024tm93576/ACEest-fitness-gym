@@ -258,6 +258,25 @@ Six stages: Checkout → Install Dependencies → Lint → Test → Docker Build
 
 ---
 
+## Assumptions
+
+### Jenkins
+- Jenkins is run locally using Docker with the `jenkins/jenkins:lts` image
+- The Docker socket `/var/run/docker.sock` is mounted into the Jenkins container to allow Docker commands
+- After every Jenkins container restart, the following must be run manually to restore Docker access:
+```bash
+  docker exec -it --user root jenkins chmod 666 /var/run/docker.sock
+```
+- Python 3 and Docker CLI must be installed inside the Jenkins container:
+```bash
+  docker exec -it --user root jenkins apt-get install -y python3 python3-pip docker.io
+```
+- These are one-time setup steps and do not need to be repeated unless the container is recreated
+
+### Docker
+- A `.dockerignore` file is included to prevent the local `aceest_fitness.db` from being copied into the image, ensuring a clean database is created on every container start
+```
+
 ## Version History
 
 
