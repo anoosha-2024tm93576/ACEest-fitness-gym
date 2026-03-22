@@ -24,6 +24,7 @@ aceest/
 ├── Dockerfile                    # Container definition
 ├── Jenkinsfile                   # Jenkins CI/CD pipeline
 ├── pytest.ini                    # Pytest configuration
+├── .dockerignore
 ├── .gitignore
 ├── tests/
 │   ├── conftest.py               # Pytest fixtures
