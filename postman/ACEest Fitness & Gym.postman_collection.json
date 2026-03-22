@@ -1,0 +1,1652 @@
+{
+  "info": {
+    "_postman_id": "d34f3854-29b1-467b-a54d-b74515f9457e",
+    "name": "ACEest Fitness & Gym",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "22963881"
+  },
+  "item": [
+    {
+      "name": "Programs",
+      "item": [
+        {
+          "name": "Get program list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/programs",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "programs"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get program list",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseURL}}/programs",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "programs"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sat, 21 Mar 2026 07:49:27 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "104"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n    \"Fat Loss (FL) - 3 day\",\n    \"Fat Loss (FL) - 5 day\",\n    \"Muscle Gain (MG) - PPL\",\n    \"Beginner (BG)\"\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get program details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/programs/Fat Loss (FL) - 3 day",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "programs",
+                "Fat Loss (FL) - 3 day"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get program details",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseURL}}/programs/Fat Loss (FL) - 3 day",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "programs",
+                    "Fat Loss (FL) - 3 day"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 03:21:45 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "309"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"color\": \"#e74c3c\",\n    \"desc\": \"3-day full-body fat loss\",\n    \"diet\": \"Breakfast: Egg Whites + Oats\\nLunch: Grilled Chicken + Brown Rice\\nDinner: Fish Curry + Millet Roti\\nTarget: ~2000 kcal\",\n    \"factor\": 22,\n    \"workout\": \"Mon: Back Squat 5x5 + Core\\nWed: Bench Press + 21-15-9\\nFri: Zone 2 Cardio 30min\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Clients",
+      "item": [
+        {
+          "name": "Get clients list",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/clients",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get clients list",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseURL}}/clients",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:10:34 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "561"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n    {\n        \"age\": 25,\n        \"calories\": 1560,\n        \"height\": 185,\n        \"id\": 1,\n        \"membership_end\": \"2026-12-31\",\n        \"membership_status\": \"Active\",\n        \"name\": \"Krishna\",\n        \"program\": \"Beginner (BG)\",\n        \"target_adherence\": 90,\n        \"target_weight\": 65,\n        \"weight\": 60\n    },\n    {\n        \"age\": 25,\n        \"calories\": 1482,\n        \"height\": 165,\n        \"id\": 2,\n        \"membership_end\": \"2026-12-31\",\n        \"membership_status\": \"Active\",\n        \"name\": \"Radha\",\n        \"program\": \"Beginner (BG)\",\n        \"target_adherence\": 90,\n        \"target_weight\": 47,\n        \"weight\": 57\n    }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Save or update client details",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Radha\",\r\n  \"age\": 25,\r\n  \"height\": 165,\r\n  \"weight\": 55,\r\n  \"program\": \"Beginner (BG)\",\r\n  \"adherence\": 80,\r\n  \"target_weight\": 47,\r\n  \"target_adherence\": 90,\r\n  \"membership_status\": \"Active\",\r\n  \"membership_end\": \"2026-12-31\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseURL}}/clients",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Save or update client details",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Radha\",\r\n  \"age\": 25,\r\n  \"height\": 165,\r\n  \"weight\": 57,\r\n  \"program\": \"Beginner (BG)\",\r\n  \"adherence\": 80,\r\n  \"target_weight\": 47,\r\n  \"target_adherence\": 90,\r\n  \"membership_status\": \"Active\",\r\n  \"membership_end\": \"2026-12-31\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:10:17 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "341"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"client\": {\n        \"adherence\": 80,\n        \"age\": 25,\n        \"calories\": 1482,\n        \"height\": 165,\n        \"membership_end\": \"2026-12-31\",\n        \"membership_status\": \"Active\",\n        \"name\": \"Radha\",\n        \"program\": \"Beginner (BG)\",\n        \"target_adherence\": 90,\n        \"target_weight\": 47,\n        \"weight\": 57\n    },\n    \"message\": \"Client Radha saved successfully\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Export clients in csv",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/clients/export",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "export"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Export clients in csv",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Radha\",\r\n  \"age\": 25,\r\n  \"height\": 165,\r\n  \"weight\": 57,\r\n  \"program\": \"Beginner (BG)\",\r\n  \"adherence\": 80,\r\n  \"target_weight\": 47,\r\n  \"target_adherence\": 90,\r\n  \"membership_status\": \"Active\",\r\n  \"membership_end\": \"2026-12-31\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/export",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "export"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:12:01 GMT"
+                },
+                {
+                  "key": "Content-Disposition",
+                  "value": "attachment; filename=clients.csv"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/csv; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "246"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "id,name,age,height,weight,program,calories,target_weight,target_adherence,membership_status,membership_end\r\n1,Krishna,25,185.0,60.0,Beginner (BG),1560,65.0,90,Active,2026-12-31\r\n2,Radha,25,165.0,57.0,Beginner (BG),1482,47.0,90,Active,2026-12-31\r\n"
+            }
+          ]
+        },
+        {
+          "name": "Get single client details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/clients/Radha",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "Radha"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get single client details",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Radha\",\r\n  \"age\": 25,\r\n  \"height\": 165,\r\n  \"weight\": 57,\r\n  \"program\": \"Beginner (BG)\",\r\n  \"adherence\": 80,\r\n  \"target_weight\": 47,\r\n  \"target_adherence\": 90,\r\n  \"membership_status\": \"Active\",\r\n  \"membership_end\": \"2026-12-31\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:12:50 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "251"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"age\": 25,\n    \"calories\": 1482,\n    \"height\": 165,\n    \"id\": 2,\n    \"membership_end\": \"2026-12-31\",\n    \"membership_status\": \"Active\",\n    \"name\": \"Radha\",\n    \"program\": \"Beginner (BG)\",\n    \"target_adherence\": 90,\n    \"target_weight\": 47,\n    \"weight\": 57\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get client summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/clients/Radha/summary",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "Radha",
+                "summary"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get client summary",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Radha\",\r\n  \"age\": 25,\r\n  \"height\": 165,\r\n  \"weight\": 57,\r\n  \"program\": \"Beginner (BG)\",\r\n  \"adherence\": 80,\r\n  \"target_weight\": 47,\r\n  \"target_adherence\": 90,\r\n  \"membership_status\": \"Active\",\r\n  \"membership_end\": \"2026-12-31\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/summary",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "summary"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:14:21 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "446"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"client\": {\n        \"age\": 25,\n        \"calories\": 1430,\n        \"height\": 165,\n        \"id\": 2,\n        \"membership_end\": \"2026-12-31\",\n        \"membership_status\": \"Active\",\n        \"name\": \"Radha\",\n        \"program\": \"Beginner (BG)\",\n        \"target_adherence\": 90,\n        \"target_weight\": 47,\n        \"weight\": 55\n    },\n    \"last_metrics\": null,\n    \"program_desc\": \"3-day simple beginner full-body\",\n    \"progress_summary\": {\n        \"avg_adherence\": 80,\n        \"weeks_logged\": 2\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get client BMI",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/clients/Radha/bmi",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "Radha",
+                "bmi"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get client BMI",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Radha\",\r\n  \"age\": 25,\r\n  \"height\": 165,\r\n  \"weight\": 57,\r\n  \"program\": \"Beginner (BG)\",\r\n  \"adherence\": 80,\r\n  \"target_weight\": 47,\r\n  \"target_adherence\": 90,\r\n  \"membership_status\": \"Active\",\r\n  \"membership_end\": \"2026-12-31\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/bmi",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "bmi"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:15:16 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "86"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"bmi\": 20.2,\n    \"category\": \"Normal\",\n    \"risk\": \"Low risk if active and strong.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get client membership details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/clients/Radha/membership",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "Radha",
+                "membership"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get client membership details",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Radha\",\r\n  \"age\": 25,\r\n  \"height\": 165,\r\n  \"weight\": 57,\r\n  \"program\": \"Beginner (BG)\",\r\n  \"adherence\": 80,\r\n  \"target_weight\": 47,\r\n  \"target_adherence\": 90,\r\n  \"membership_status\": \"Active\",\r\n  \"membership_end\": \"2026-12-31\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/membership",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "membership"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:16:05 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "91"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"client\": \"Radha\",\n    \"membership_end\": \"2026-12-31\",\n    \"membership_status\": \"Active\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Generate program",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/clients/Radha/program/generate?exp_level=beginner",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "Radha",
+                "program",
+                "generate"
+              ],
+              "query": [
+                {
+                  "key": "exp_level",
+                  "value": "beginner"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Generate program - beginner",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Radha\",\r\n  \"age\": 25,\r\n  \"height\": 165,\r\n  \"weight\": 57,\r\n  \"program\": \"Beginner (BG)\",\r\n  \"adherence\": 80,\r\n  \"target_weight\": 47,\r\n  \"target_adherence\": 90,\r\n  \"membership_status\": \"Active\",\r\n  \"membership_end\": \"2026-12-31\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/program/generate?exp_level=beginner",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "program",
+                    "generate"
+                  ],
+                  "query": [
+                    {
+                      "key": "exp_level",
+                      "value": "beginner"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:16:57 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1053"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"client\": \"Radha\",\n    \"exp_level\": \"beginner\",\n    \"focus\": \"Full Body\",\n    \"program\": \"Beginner (BG)\",\n    \"schedule\": [\n        {\n            \"day\": \"Monday\",\n            \"exercise\": \"Dumbbell Row\",\n            \"reps\": 10,\n            \"sets\": 3\n        },\n        {\n            \"day\": \"Monday\",\n            \"exercise\": \"Push-Up\",\n            \"reps\": 8,\n            \"sets\": 2\n        },\n        {\n            \"day\": \"Monday\",\n            \"exercise\": \"Dumbbell Press\",\n            \"reps\": 12,\n            \"sets\": 3\n        },\n        {\n            \"day\": \"Tuesday\",\n            \"exercise\": \"Plank\",\n            \"reps\": 11,\n            \"sets\": 2\n        },\n        {\n            \"day\": \"Tuesday\",\n            \"exercise\": \"Dumbbell Press\",\n            \"reps\": 10,\n            \"sets\": 3\n        },\n        {\n            \"day\": \"Tuesday\",\n            \"exercise\": \"Pull-Up\",\n            \"reps\": 11,\n            \"sets\": 3\n        },\n        {\n            \"day\": \"Wednesday\",\n            \"exercise\": \"Dumbbell Press\",\n            \"reps\": 8,\n            \"sets\": 2\n        },\n        {\n            \"day\": \"Wednesday\",\n            \"exercise\": \"Plank\",\n            \"reps\": 12,\n            \"sets\": 3\n        },\n        {\n            \"day\": \"Wednesday\",\n            \"exercise\": \"Dumbbell Row\",\n            \"reps\": 11,\n            \"sets\": 2\n        }\n    ]\n}"
+            },
+            {
+              "name": "Generate program - intermediate",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Radha\",\r\n  \"age\": 25,\r\n  \"height\": 165,\r\n  \"weight\": 57,\r\n  \"program\": \"Beginner (BG)\",\r\n  \"adherence\": 80,\r\n  \"target_weight\": 47,\r\n  \"target_adherence\": 90,\r\n  \"membership_status\": \"Active\",\r\n  \"membership_end\": \"2026-12-31\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/program/generate?exp_level=intermediate",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "program",
+                    "generate"
+                  ],
+                  "query": [
+                    {
+                      "key": "exp_level",
+                      "value": "intermediate"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:17:31 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "1755"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"client\": \"Radha\",\n    \"exp_level\": \"intermediate\",\n    \"focus\": \"Full Body\",\n    \"program\": \"Beginner (BG)\",\n    \"schedule\": [\n        {\n            \"day\": \"Monday\",\n            \"exercise\": \"Dumbbell Press\",\n            \"reps\": 11,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Monday\",\n            \"exercise\": \"Lunge\",\n            \"reps\": 15,\n            \"sets\": 3\n        },\n        {\n            \"day\": \"Monday\",\n            \"exercise\": \"Dumbbell Row\",\n            \"reps\": 15,\n            \"sets\": 3\n        },\n        {\n            \"day\": \"Monday\",\n            \"exercise\": \"Plank\",\n            \"reps\": 8,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Tuesday\",\n            \"exercise\": \"Dumbbell Row\",\n            \"reps\": 11,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Tuesday\",\n            \"exercise\": \"Plank\",\n            \"reps\": 12,\n            \"sets\": 3\n        },\n        {\n            \"day\": \"Tuesday\",\n            \"exercise\": \"Lunge\",\n            \"reps\": 9,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Tuesday\",\n            \"exercise\": \"Dumbbell Press\",\n            \"reps\": 12,\n            \"sets\": 3\n        },\n        {\n            \"day\": \"Wednesday\",\n            \"exercise\": \"Push-Up\",\n            \"reps\": 12,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Wednesday\",\n            \"exercise\": \"Pull-Up\",\n            \"reps\": 14,\n            \"sets\": 3\n        },\n        {\n            \"day\": \"Wednesday\",\n            \"exercise\": \"Lunge\",\n            \"reps\": 14,\n            \"sets\": 3\n        },\n        {\n            \"day\": \"Wednesday\",\n            \"exercise\": \"Plank\",\n            \"reps\": 10,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Thursday\",\n            \"exercise\": \"Lunge\",\n            \"reps\": 14,\n            \"sets\": 3\n        },\n        {\n            \"day\": \"Thursday\",\n            \"exercise\": \"Plank\",\n            \"reps\": 14,\n            \"sets\": 3\n        },\n        {\n            \"day\": \"Thursday\",\n            \"exercise\": \"Dumbbell Press\",\n            \"reps\": 14,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Thursday\",\n            \"exercise\": \"Dumbbell Row\",\n            \"reps\": 11,\n            \"sets\": 4\n        }\n    ]\n}"
+            },
+            {
+              "name": "Generate program - advanced",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Radha\",\r\n  \"age\": 25,\r\n  \"height\": 165,\r\n  \"weight\": 57,\r\n  \"program\": \"Beginner (BG)\",\r\n  \"adherence\": 80,\r\n  \"target_weight\": 47,\r\n  \"target_adherence\": 90,\r\n  \"membership_status\": \"Active\",\r\n  \"membership_end\": \"2026-12-31\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/program/generate?exp_level=advanced",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "program",
+                    "generate"
+                  ],
+                  "query": [
+                    {
+                      "key": "exp_level",
+                      "value": "advanced"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:17:56 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "2151"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"client\": \"Radha\",\n    \"exp_level\": \"advanced\",\n    \"focus\": \"Full Body\",\n    \"program\": \"Beginner (BG)\",\n    \"schedule\": [\n        {\n            \"day\": \"Monday\",\n            \"exercise\": \"Dumbbell Press\",\n            \"reps\": 10,\n            \"sets\": 5\n        },\n        {\n            \"day\": \"Monday\",\n            \"exercise\": \"Plank\",\n            \"reps\": 14,\n            \"sets\": 5\n        },\n        {\n            \"day\": \"Monday\",\n            \"exercise\": \"Dumbbell Row\",\n            \"reps\": 14,\n            \"sets\": 5\n        },\n        {\n            \"day\": \"Monday\",\n            \"exercise\": \"Push-Up\",\n            \"reps\": 7,\n            \"sets\": 5\n        },\n        {\n            \"day\": \"Tuesday\",\n            \"exercise\": \"Lunge\",\n            \"reps\": 6,\n            \"sets\": 5\n        },\n        {\n            \"day\": \"Tuesday\",\n            \"exercise\": \"Dumbbell Press\",\n            \"reps\": 8,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Tuesday\",\n            \"exercise\": \"Push-Up\",\n            \"reps\": 8,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Tuesday\",\n            \"exercise\": \"Plank\",\n            \"reps\": 6,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Wednesday\",\n            \"exercise\": \"Pull-Up\",\n            \"reps\": 11,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Wednesday\",\n            \"exercise\": \"Dumbbell Press\",\n            \"reps\": 12,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Wednesday\",\n            \"exercise\": \"Lunge\",\n            \"reps\": 11,\n            \"sets\": 5\n        },\n        {\n            \"day\": \"Wednesday\",\n            \"exercise\": \"Push-Up\",\n            \"reps\": 9,\n            \"sets\": 5\n        },\n        {\n            \"day\": \"Thursday\",\n            \"exercise\": \"Lunge\",\n            \"reps\": 10,\n            \"sets\": 5\n        },\n        {\n            \"day\": \"Thursday\",\n            \"exercise\": \"Dumbbell Row\",\n            \"reps\": 15,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Thursday\",\n            \"exercise\": \"Plank\",\n            \"reps\": 14,\n            \"sets\": 5\n        },\n        {\n            \"day\": \"Thursday\",\n            \"exercise\": \"Dumbbell Press\",\n            \"reps\": 9,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Friday\",\n            \"exercise\": \"Pull-Up\",\n            \"reps\": 8,\n            \"sets\": 5\n        },\n        {\n            \"day\": \"Friday\",\n            \"exercise\": \"Plank\",\n            \"reps\": 13,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Friday\",\n            \"exercise\": \"Push-Up\",\n            \"reps\": 15,\n            \"sets\": 4\n        },\n        {\n            \"day\": \"Friday\",\n            \"exercise\": \"Dumbbell Press\",\n            \"reps\": 8,\n            \"sets\": 5\n        }\n    ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Progress",
+      "item": [
+        {
+          "name": "Get Client Progress",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/clients/Radha/progress",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "Radha",
+                "progress"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get Client Progress",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"name\": \"Radha\",\r\n  \"age\": 25,\r\n  \"height\": 165,\r\n  \"weight\": 57,\r\n  \"program\": \"Beginner (BG)\",\r\n  \"adherence\": 80,\r\n  \"target_weight\": 47,\r\n  \"target_adherence\": 90,\r\n  \"membership_status\": \"Active\",\r\n  \"membership_end\": \"2026-12-31\"\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/progress",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "progress"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:22:27 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "303"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n    {\n        \"adherence\": 80,\n        \"client_name\": \"Radha\",\n        \"id\": 2,\n        \"week\": \"Week 12 - 2026\"\n    },\n    {\n        \"adherence\": 80,\n        \"client_name\": \"Radha\",\n        \"id\": 3,\n        \"week\": \"Week 12 - 2026\"\n    },\n    {\n        \"adherence\": 50,\n        \"client_name\": \"Radha\",\n        \"id\": 4,\n        \"week\": \"Week 12 - 2026\"\n    }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Save client adherence",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"adherence\": 50\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseURL}}/clients/Radha/progress",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "Radha",
+                "progress"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Save client adherence",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"adherence\": 50\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/progress",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "progress"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:22:05 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "91"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"adherence\": 50,\n    \"message\": \"Progress saved for Radha\",\n    \"week\": \"Week 12 - 2026\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get progress chart",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/clients/Radha/progress/chart",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "Radha",
+                "progress",
+                "chart"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get progress chart",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"adherence\": 50\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/progress/chart",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "progress",
+                    "chart"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:23:07 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "247"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"chart_data\": [\n        {\n            \"adherence\": 80,\n            \"week\": \"Week 12 - 2026\"\n        },\n        {\n            \"adherence\": 80,\n            \"week\": \"Week 12 - 2026\"\n        },\n        {\n            \"adherence\": 50,\n            \"week\": \"Week 12 - 2026\"\n        }\n    ],\n    \"client\": \"Radha\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Workouts",
+      "item": [
+        {
+          "name": "Log workout session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"date\": \"2026-03-22\",\r\n  \"workout_type\": \"Strength\",\r\n  \"duration_min\": 20,\r\n  \"notes\": \"Felt strong\",\r\n  \"exercises\": [\r\n    { \"name\": \"Squat\", \"sets\": 5, \"reps\": 5, \"weight\": 100 }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseURL}}/clients/Radha/workouts",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "Radha",
+                "workouts"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Log workout session",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"date\": \"2026-03-08\",\r\n  \"workout_type\": \"Strength\",\r\n  \"duration_min\": 20,\r\n  \"notes\": \"Felt strong\",\r\n  \"exercises\": [\r\n    { \"name\": \"Squat\", \"sets\": 5, \"reps\": 5, \"weight\": 100 }\r\n  ]\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/workouts",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "workouts"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:25:05 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "117"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"date\": \"2026-03-08\",\n    \"message\": \"Workout logged for Radha\",\n    \"workout_id\": 3,\n    \"workout_type\": \"Strength\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get workout history",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/clients/Radha/workouts",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "Radha",
+                "workouts"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get workout history",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"date\": \"2026-03-08\",\r\n  \"workout_type\": \"Strength\",\r\n  \"duration_min\": 20,\r\n  \"notes\": \"Felt strong\",\r\n  \"exercises\": [\r\n    { \"name\": \"Squat\", \"sets\": 5, \"reps\": 5, \"weight\": 100 }\r\n  ]\r\n}"
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/workouts",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "workouts"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:26:19 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "639"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n    {\n        \"client_name\": \"Radha\",\n        \"date\": \"2026-03-22\",\n        \"duration_min\": 20,\n        \"id\": 4,\n        \"notes\": \"Felt strong\",\n        \"workout_type\": \"Strength\"\n    },\n    {\n        \"client_name\": \"Radha\",\n        \"date\": \"2026-03-08\",\n        \"duration_min\": 20,\n        \"id\": 3,\n        \"notes\": \"Felt strong\",\n        \"workout_type\": \"Strength\"\n    },\n    {\n        \"client_name\": \"Radha\",\n        \"date\": \"2026-03-08\",\n        \"duration_min\": 60,\n        \"id\": 2,\n        \"notes\": \"Felt strong\",\n        \"workout_type\": \"Strength\"\n    },\n    {\n        \"client_name\": \"Radha\",\n        \"date\": \"2026-03-08\",\n        \"duration_min\": 60,\n        \"id\": 1,\n        \"notes\": \"Felt strong\",\n        \"workout_type\": \"Strength\"\n    }\n]"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Body Metrics",
+      "item": [
+        {
+          "name": "Save client body metrics",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"date\": \"2026-03-22\",\r\n  \"weight\": 58,\r\n  \"waist\": 79,\r\n  \"bodyfat\": 14\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseURL}}/clients/Radha/metrics",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "Radha",
+                "metrics"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Save client body metrics",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n  \"date\": \"2026-03-08\",\r\n  \"weight\": 60,\r\n  \"waist\": 80,\r\n  \"bodyfat\": 16\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/metrics",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "metrics"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:28:32 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "116"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"bodyfat\": 16,\n    \"date\": \"2026-03-08\",\n    \"message\": \"Metrics logged for Radha\",\n    \"waist\": 80,\n    \"weight\": 60\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get client body metrics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/clients/Radha/metrics",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "Radha",
+                "metrics"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get client body metrics",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/metrics",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "metrics"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:29:58 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "408"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n    {\n        \"bodyfat\": 16,\n        \"client_name\": \"Radha\",\n        \"date\": \"2026-03-08\",\n        \"id\": 1,\n        \"waist\": 80,\n        \"weight\": 60\n    },\n    {\n        \"bodyfat\": 16,\n        \"client_name\": \"Radha\",\n        \"date\": \"2026-03-08\",\n        \"id\": 2,\n        \"waist\": 80,\n        \"weight\": 60\n    },\n    {\n        \"bodyfat\": 14,\n        \"client_name\": \"Radha\",\n        \"date\": \"2026-03-22\",\n        \"id\": 3,\n        \"waist\": 79,\n        \"weight\": 58\n    }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get client body metrics chart",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/clients/Radha/metrics/chart",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "clients",
+                "Radha",
+                "metrics",
+                "chart"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Get client body metrics chart",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{BaseURL}}/clients/Radha/metrics/chart",
+                  "host": [
+                    "{{BaseURL}}"
+                  ],
+                  "path": [
+                    "clients",
+                    "Radha",
+                    "metrics",
+                    "chart"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Server",
+                  "value": "Werkzeug/3.1.6 Python/3.11.15"
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 22 Mar 2026 04:30:19 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "232"
+                },
+                {
+                  "key": "Connection",
+                  "value": "close"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"chart_data\": [\n        {\n            \"date\": \"2026-03-08\",\n            \"weight\": 60\n        },\n        {\n            \"date\": \"2026-03-08\",\n            \"weight\": 60\n        },\n        {\n            \"date\": \"2026-03-22\",\n            \"weight\": 58\n        }\n    ],\n    \"client\": \"Radha\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            ""
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Health Check",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BaseURL}}/",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Server",
+              "value": "Werkzeug/3.1.6 Python/3.11.15"
+            },
+            {
+              "key": "Date",
+              "value": "Sun, 22 Mar 2026 03:22:17 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "49"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"ACEest Fitness API is running\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/auth/login",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Login",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"admin\",\r\n    \"password\": \"admin\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseURL}}/auth/login",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Server",
+              "value": "Werkzeug/3.1.6 Python/3.11.15"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 21 Mar 2026 07:47:22 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "75"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"Welcome admin\",\n    \"role\": \"Admin\",\n    \"username\": \"admin\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"trainer1\",\r\n    \"password\": \"pass123\",\r\n    \"role\": \"Trainer\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/auth/register",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "auth",
+            "register"
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Register",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\": \"trainer1\",\r\n    \"password\": \"pass123\",\r\n    \"role\": \"Trainer\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{BaseURL}}/auth/register",
+              "host": [
+                "{{BaseURL}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": null,
+          "header": [
+            {
+              "key": "Server",
+              "value": "Werkzeug/3.1.6 Python/3.11.15"
+            },
+            {
+              "key": "Date",
+              "value": "Sat, 21 Mar 2026 07:48:20 GMT"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Content-Length",
+              "value": "78"
+            },
+            {
+              "key": "Connection",
+              "value": "close"
+            }
+          ],
+          "cookie": [],
+          "body": "{\n    \"message\": \"User trainer1 registered successfully\",\n    \"role\": \"Trainer\"\n}"
+        }
+      ]
+    }
+  ]
+}
