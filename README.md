@@ -254,7 +254,9 @@ Triggered on every push and pull request to `main`. Four stages:
 
 ### Jenkins
 
-Six stages: Checkout → Install Dependencies → Lint → Test → Docker Build → Docker Test
+Four stages: Checkout → Install Dependencies → Lint → Test
+
+> Docker Build and Test are handled exclusively by GitHub Actions. Jenkins focuses on code quality - linting and testing
 
 ---
 
@@ -262,25 +264,21 @@ Six stages: Checkout → Install Dependencies → Lint → Test → Docker Build
 
 ### Jenkins
 - Jenkins is run locally using Docker with the `jenkins/jenkins:lts` image
-- The Docker socket `/var/run/docker.sock` is mounted into the Jenkins container to allow Docker commands
-- After every Jenkins container restart, the following must be run manually to restore Docker access:
+- Python 3 and pip must be installed inside the Jenkins container:
 ```bash
-  docker exec -it --user root jenkins chmod 666 /var/run/docker.sock
+  docker exec -it --user root jenkins apt-get install -y python3 python3-pip
 ```
-- Python 3 and Docker CLI must be installed inside the Jenkins container:
-```bash
-  docker exec -it --user root jenkins apt-get install -y python3 python3-pip docker.io
-```
-- These are one-time setup steps and do not need to be repeated unless the container is recreated
+- This is a one-time setup step and does not need to be repeated unless the container is recreated
 
 ### Docker
 - A `.dockerignore` file is included to prevent the local `aceest_fitness.db` from being copied into the image, ensuring a clean database is created on every container start
-```
+- The application runs as a non-root user (`appuser`) inside the container for security
+
 
 ## Version History
 
 
-| Version | highlights                                                |
+| Version | Highlights                                                |
 | ------- | --------------------------------------------------------- |
 | v1.0    | Initial Flask app, program selector API                   |
 | v1.1    | Client profile, calorie calculator                        |
@@ -291,6 +289,4 @@ Six stages: Checkout → Install Dependencies → Lint → Test → Docker Build
 | v3.1.2  | Login system, user registration, AI program generator     |
 | v3.2.4  | Membership status and end date, membership check endpoint |
 
-
 > v2.1.2 and v3.0.1 are stability releases with no code changes — no commits exist for these versions.
-
