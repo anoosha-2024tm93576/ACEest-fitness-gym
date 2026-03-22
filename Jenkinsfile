@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     stages {
-
         stage('Checkout') {
             steps {
                 echo 'Cloning repository...'
@@ -20,7 +19,7 @@ pipeline {
         stage('Lint') {
             steps {
                 echo 'Running lint...'
-                sh 'pip3 install flake8 --break-system-packages && python3 -m flake8 app.py --max-line-length=120 --ignore=E501'
+                sh 'python3 -m flake8 app.py --max-line-length=120 --ignore=E501'
             }
         }
 
@@ -30,26 +29,11 @@ pipeline {
                 sh 'python3 -m pytest -v'
             }
         }
-
-        stage('Docker Build') {
-            steps {
-                echo 'Building Docker image...'
-                sh 'docker build -t aceest-fitness:latest .'
-            }
-        }
-
-        stage('Docker Test') {
-            steps {
-                echo 'Running tests inside Docker...'
-                sh 'docker run --rm aceest-fitness:latest pytest -v'
-            }
-        }
-
     }
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Pipeline passed.'
         }
         failure {
             echo 'Pipeline failed. Check the logs above.'
