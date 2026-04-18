@@ -2,11 +2,11 @@ name: ACEest Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, assignment-2 ]
     tags:
       - 'v*'
   pull_request:
-    branches: [ main ]
+    branches: [ main, assignment-2 ]
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
