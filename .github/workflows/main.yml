@@ -3,6 +3,8 @@ name: ACEest Pipeline
 on:
   push:
     branches: [ main ]
+    tags:
+      - 'v*'
   pull_request:
     branches: [ main ]
 
@@ -71,3 +73,27 @@ jobs:
 
       - name: Run pytest inside container
         run: docker run --rm aceest-fitness:latest pytest tests/test_app.py -v
+
+  docker-push:
+    name: Push to Docker Hub
+    runs-on: ubuntu-latest
+    needs: docker-test
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+ 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+ 
+      - name: Extract tag name
+        id: tag
+        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+ 
+      - name: Build and push Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/aceest-fitness:${{ steps.tag.outputs.TAG }} .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/aceest-fitness:${{ steps.tag.outputs.TAG }} 
