@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "2024tm93576anoosha/aceest-fitness"
+        IMAGE_TAG = "v4.1.${BUILD_NUMBER}"
+    }
+
     stages {
         stage('Checkout') {
             steps {
