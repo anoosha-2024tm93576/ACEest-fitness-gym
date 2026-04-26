@@ -15,15 +15,17 @@ pipeline {
         }
 
         stage('Install, Lint, Test') {
+            agent {
+                docker {
+                    image 'python:3.11-slim'
+                }
+            }
             steps {
                 echo 'Running inside Python container...'
                 sh '''
-                    docker run --rm -v $(pwd):/app -w /app python:3.11-slim \
-                    sh -c "
-                    pip install -r requirements.txt &&
-                    python -m flake8 app.py --max-line-length=120 --ignore=E501 &&
-                    python -m pytest -v
-                    "
+                pip install -r requirements.txt
+                python -m flake8 app.py --max-line-length=120 --ignore=E501
+                python -m pytest -v
                 '''
             }
         }
