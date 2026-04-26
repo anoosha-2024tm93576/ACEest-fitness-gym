@@ -32,6 +32,26 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            steps {
+                echo 'Running SonarQube analysis...'
+                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+                    sh '''
+                        sonar-scanner \
+                            -Dsonar.projectKey=aceest-fitness \
+                            -Dsonar.projectName="ACEest Fitness & Gym" \
+                            -Dsonar.projectVersion=3.2.4 \
+                            -Dsonar.sources=. \
+                            -Dsonar.exclusions=tests/**,**/__pycache__/**,*.db,k8s/**,postman/** \
+                            -Dsonar.python.version=3 \
+                            -Dsonar.host.url=http://host.docker.internal:9000 \
+                            -Dsonar.token=$SONAR_TOKEN
+                    '''
+                }
+            }
+        }
+
+
         stage('Build Docker Image') {
             steps {
                 echo "Building Docker image..."

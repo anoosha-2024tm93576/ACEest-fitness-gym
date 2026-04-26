@@ -13,3 +13,8 @@ Thumbs.db
 
 # Pytest
 .pytest_cache/
+
+# SonarQube
+sonar-project.properties
+.sonar/
+.scannerwork/
