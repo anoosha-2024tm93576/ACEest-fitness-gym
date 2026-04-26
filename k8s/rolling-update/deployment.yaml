@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: aceest-fitness-rolling
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: aceest-fitness
+  template:
+    metadata:
+      labels:
+        app: aceest-fitness
+    spec:
+      containers:
+       - name: aceest-fitness
+         image: 2024tm93576anoosha/aceest-fitness:v3.2.4
+         ports:
+          - containerPort: 5000

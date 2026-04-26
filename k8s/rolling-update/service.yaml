@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: aceest-fitness-canary
+  name: aceest-fitness-rolling
 spec:
   type: NodePort
   selector:
@@ -9,4 +9,4 @@ spec:
   ports:
     - port: 80
       targetPort: 5000
-      nodePort: 30007
+      nodePort: 30002
