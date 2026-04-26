@@ -58,14 +58,23 @@ pipeline {
                 sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
             }
         }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                echo 'Deploying to Kubernetes...'
+                sh 'kubectl set image deployment/aceest-fitness aceest-fitness=$IMAGE_NAME:$IMAGE_TAG'
+                sh 'kubectl rollout status deployment/aceest-fitness'
+            }
+        }
     }
 
     post {
         success {
-            echo 'Pipeline passed.'
+            echo 'Pipeline passed successfully.'
         }
         failure {
-            echo 'Pipeline failed. Check the logs above.'
+            echo 'Pipeline failed. Rolling back to last stable version...'
+            sh 'kubectl rollout undo deployment/aceest-fitness'
         }
     }
 }
