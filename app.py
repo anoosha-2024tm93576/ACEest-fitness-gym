@@ -4,6 +4,7 @@ import io
 import sqlite3
 from datetime import datetime, date
 import random
+import os
 
 app = Flask(__name__)
 
@@ -714,4 +715,6 @@ def get_membership(name):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    host = os.environ.get('FLASK_HOST', '0.0.0.0')
+    port = int(os.environ.get('FLASK_PORT', 5000))
+    app.run(host=host, port=port, debug=True)
