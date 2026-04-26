@@ -174,7 +174,7 @@ def get_calories(weight, program):
 init_db()
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
     return jsonify({
         "message": "ACEest Fitness API is running"
