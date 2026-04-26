@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        IMAGE_NAME = "2024tm93576anoosha/aceest-fitness"
+        IMAGE_TAG = "v4.1.${BUILD_NUMBER}"
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -11,32 +16,65 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                echo 'Installing dependencies...'
                 sh 'pip3 install -r requirements.txt --break-system-packages'
-            }
+            }   
         }
 
         stage('Lint') {
             steps {
-                echo 'Running lint...'
                 sh 'python3 -m flake8 app.py --max-line-length=120 --ignore=E501'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Running tests...'
                 sh 'python3 -m pytest -v'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                echo "Building Docker image..."
+                sh 'docker build -t $IMAGE_NAME:$IMAGE_TAG .'
+            }
+        }
+
+        stage('Login to Docker Hub') {
+            steps {
+                echo 'Logging into Docker Hub...'
+                withCredentials([usernamePassword(
+                credentialsId: 'dockerhub-credentials',
+                usernameVariable: 'DOCKER_USER',
+                passwordVariable: 'DOCKER_PASS'
+                )]) {
+                sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                echo 'Pushing Docker image...'
+                sh 'docker push $IMAGE_NAME:$IMAGE_TAG'
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                echo 'Deploying to Kubernetes...'
+                sh 'kubectl set image deployment/aceest-fitness aceest-fitness=$IMAGE_NAME:$IMAGE_TAG'
+                sh 'kubectl rollout status deployment/aceest-fitness'
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline passed.'
+            echo 'Pipeline passed successfully.'
         }
         failure {
-            echo 'Pipeline failed. Check the logs above.'
+            echo 'Pipeline failed. Rolling back to last stable version...'
+            sh 'kubectl rollout undo deployment/aceest-fitness'
         }
     }
 }
