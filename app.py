@@ -6,6 +6,8 @@ from datetime import datetime, date
 import random
 import os
 
+CLIENT_NOT_FOUND = 'Client not found'
+
 app = Flask(__name__)
 
 DB_NAME = "aceest_fitness.db"
@@ -298,7 +300,7 @@ def load_client(name):
     conn.close()
 
     if not client:
-        return jsonify({'error': 'Client not found'}), 404
+        return jsonify({'error': CLIENT_NOT_FOUND}), 404
 
     return jsonify(dict(client))
 
@@ -328,7 +330,7 @@ def save_progress(name):
 
     if not client:
         conn.close()
-        return jsonify({'error': 'Client not found'}), 404
+        return jsonify({'error': CLIENT_NOT_FOUND}), 404
 
     week = datetime.now().strftime("Week %U - %Y")
     conn.execute("""
@@ -352,7 +354,7 @@ def get_progress_chart(name):
 
     if not client:
         conn.close()
-        return jsonify({'error': 'Client not found'}), 404
+        return jsonify({'error': CLIENT_NOT_FOUND}), 404
 
     rows = conn.execute("""
         SELECT week, adherence
@@ -378,7 +380,7 @@ def get_summary(name):
 
     if not client:
         conn.close()
-        return jsonify({'error': 'Client not found'}), 404
+        return jsonify({'error': CLIENT_NOT_FOUND}), 404
 
     total_weeks, avg_adherence = conn.execute("SELECT COUNT(*), AVG(adherence) FROM progress WHERE client_name=?", (name,)).fetchone()
 
@@ -413,7 +415,7 @@ def get_bmi(name):
     conn.close()
 
     if not client:
-        return jsonify({'error': 'Client not found'}), 404
+        return jsonify({'error': CLIENT_NOT_FOUND}), 404
 
     height = client['height']
     weight = client['weight']
@@ -459,7 +461,7 @@ def log_workout(name):
 
     if not client:
         conn.close()
-        return jsonify({'error': 'Client not found'}), 404
+        return jsonify({'error': CLIENT_NOT_FOUND}), 404
 
     cur = conn.execute("""
         INSERT INTO workouts (client_name, date, workout_type, duration_min, notes)
@@ -494,7 +496,7 @@ def get_workouts(name):
 
     if not client:
         conn.close()
-        return jsonify({'error': 'Client not found'}), 404
+        return jsonify({'error': CLIENT_NOT_FOUND}), 404
 
     workouts = conn.execute("""
         SELECT * FROM workouts WHERE client_name=? ORDER BY date DESC, id DESC
@@ -522,7 +524,7 @@ def log_metrics(name):
 
     if not client:
         conn.close()
-        return jsonify({'error': 'Client not found'}), 404
+        return jsonify({'error': CLIENT_NOT_FOUND}), 404
 
     conn.execute("""
         INSERT INTO metrics (client_name, date, weight, waist, bodyfat)
@@ -549,7 +551,7 @@ def get_metrics(name):
 
     if not client:
         conn.close()
-        return jsonify({'error': 'Client not found'}), 404
+        return jsonify({'error': CLIENT_NOT_FOUND}), 404
 
     metrics = conn.execute("""
         SELECT * FROM metrics WHERE client_name=? ORDER BY date
@@ -568,7 +570,7 @@ def get_metrics_chart(name):
 
     if not client:
         conn.close()
-        return jsonify({'error': 'Client not found'}), 404
+        return jsonify({'error': CLIENT_NOT_FOUND}), 404
 
     rows = conn.execute("""
         SELECT date, weight FROM metrics
@@ -643,7 +645,7 @@ def generate_program(name):
     conn.close()
 
     if not client:
-        return jsonify({'error': 'Client not found'}), 404
+        return jsonify({'error': CLIENT_NOT_FOUND}), 404
 
     program_name = client['program']
 
@@ -705,7 +707,7 @@ def get_membership(name):
     conn.close()
 
     if not client:
-        return jsonify({'error': 'Client not found'}), 404
+        return jsonify({'error': CLIENT_NOT_FOUND}), 404
 
     return jsonify({
         'client': name,
