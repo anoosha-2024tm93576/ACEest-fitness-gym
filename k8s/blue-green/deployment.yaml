@@ -48,6 +48,6 @@ spec:
     spec:
       containers:
         -  name: aceest-fitness
-           image: 2024tm93576anoosha/aceest-fitness:v3.2.4-new
+           image: 2024tm93576anoosha/aceest-fitness:v3.2.5
            ports:
             - containerPort: 5000
