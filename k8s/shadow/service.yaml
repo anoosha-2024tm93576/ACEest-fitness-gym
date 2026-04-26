@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aceest-fitness-shadow
+spec:
+  type: NodePort
+  selector:
+    app: aceest-fitness
+    role: stable
+  ports:
+    - port: 80
+      targetPort: 5000
+      nodePort: 30004
