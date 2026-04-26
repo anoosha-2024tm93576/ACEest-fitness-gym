@@ -14,19 +14,21 @@ pipeline {
             }
         }
 
-        stage('Install, Lint, Test') {
-            agent {
-                docker {
-                    image 'python:3.11-slim'
-                }
-            }
+        stage('Install Dependencies') {
             steps {
-                echo 'Running inside Python container...'
-                sh '''
-                pip install -r requirements.txt
-                python -m flake8 app.py --max-line-length=120 --ignore=E501
-                python -m pytest -v
-                '''
+                sh 'pip3 install -r requirements.txt --break-system-packages'
+            }   
+        }
+
+        stage('Lint') {
+            steps {
+                sh 'python3 -m flake8 app.py --max-line-length=120 --ignore=E501'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'python3 -m pytest -v'
             }
         }
 
