@@ -173,7 +173,7 @@ init_db()
 @app.route('/')
 def home():
     return jsonify({
-        "message": "ACEest Fitness API v3.2.5 is running"
+        "message": "ACEest Fitness API is running"
     })
 
 
