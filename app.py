@@ -7,6 +7,7 @@ import random
 import os
 
 CLIENT_NOT_FOUND = 'Client not found'
+SELECT_CLIENT_BY_NAME = "SELECT * FROM clients WHERE name=?"
 
 app = Flask(__name__)
 
@@ -295,7 +296,7 @@ def export_clients():
 def load_client(name):
     conn = get_db()
     client = conn.execute(
-        "SELECT * FROM clients WHERE name=?", (name,)
+        SELECT_CLIENT_BY_NAME, (name,)
     ).fetchone()
     conn.close()
 
@@ -325,7 +326,7 @@ def save_progress(name):
 
     conn = get_db()
     client = conn.execute(
-        "SELECT * FROM clients WHERE name=?", (name,)
+        SELECT_CLIENT_BY_NAME, (name,)
     ).fetchone()
 
     if not client:
@@ -350,7 +351,7 @@ def save_progress(name):
 @app.route('/clients/<name>/progress/chart', methods=['GET'])
 def get_progress_chart(name):
     conn = get_db()
-    client = conn.execute("SELECT * FROM clients WHERE name=?", (name,)).fetchone()
+    client = conn.execute(SELECT_CLIENT_BY_NAME, (name,)).fetchone()
 
     if not client:
         conn.close()
@@ -376,7 +377,7 @@ def get_progress_chart(name):
 @app.route('/clients/<name>/summary', methods=['GET'])
 def get_summary(name):
     conn = get_db()
-    client = conn.execute("SELECT * FROM clients WHERE name=?", (name,)).fetchone()
+    client = conn.execute(SELECT_CLIENT_BY_NAME, (name,)).fetchone()
 
     if not client:
         conn.close()
@@ -456,7 +457,7 @@ def log_workout(name):
 
     conn = get_db()
     client = conn.execute(
-        "SELECT * FROM clients WHERE name=?", (name,)
+        SELECT_CLIENT_BY_NAME, (name,)
     ).fetchone()
 
     if not client:
@@ -491,7 +492,7 @@ def log_workout(name):
 def get_workouts(name):
     conn = get_db()
     client = conn.execute(
-        "SELECT * FROM clients WHERE name=?", (name,)
+        SELECT_CLIENT_BY_NAME, (name,)
     ).fetchone()
 
     if not client:
@@ -519,7 +520,7 @@ def log_metrics(name):
 
     conn = get_db()
     client = conn.execute(
-        "SELECT * FROM clients WHERE name=?", (name,)
+        SELECT_CLIENT_BY_NAME, (name,)
     ).fetchone()
 
     if not client:
@@ -546,7 +547,7 @@ def log_metrics(name):
 def get_metrics(name):
     conn = get_db()
     client = conn.execute(
-        "SELECT * FROM clients WHERE name=?", (name,)
+        SELECT_CLIENT_BY_NAME, (name,)
     ).fetchone()
 
     if not client:
@@ -565,7 +566,7 @@ def get_metrics(name):
 def get_metrics_chart(name):
     conn = get_db()
     client = conn.execute(
-        "SELECT * FROM clients WHERE name=?", (name,)
+        SELECT_CLIENT_BY_NAME, (name,)
     ).fetchone()
 
     if not client:
