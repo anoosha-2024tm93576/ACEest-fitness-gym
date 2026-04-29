@@ -6,32 +6,68 @@ A Flask REST API for the ACEest Fitness & Gym management system, built as part o
 
 ## Tech Stack
 
-- **Python 3.14** + **Flask**
+- **Python 3.11+** + **Flask**
 - **SQLite** for persistence
 - **Pytest** + **pytest-flask** for testing
 - **Docker** for containerisation
 - **GitHub Actions** for CI/CD
 - **Jenkins** for on-premise CI/CD
+- **SonarQube** for code quality analysis
+
+---
+
+## Prerequisites
+
+- **Local development**: Python 3.11+ and `pip`
+- **Docker run**: Docker Desktop / Docker Engine
+- **CI/CD (optional)**:
+  - GitHub Actions runs automatically in GitHub
+  - Jenkins needs: `python3` + `pip3`, Docker CLI/daemon access, SonarScanner, and `kubectl` configured for your cluster
 
 ---
 
 ## Project Structure
 
 ```
-aceest/
-├── app.py                        # Flask application
-├── requirements.txt              # Python dependencies
-├── Dockerfile                    # Container definition
-├── Jenkinsfile                   # Jenkins CI/CD pipeline
-├── pytest.ini                    # Pytest configuration
+.
 ├── .dockerignore
 ├── .gitignore
+├── app.py
+├── Dockerfile
+├── Jenkinsfile
+├── pytest.ini
+├── README.md
+├── requirements.txt
+├── .github/
+│   └── workflows/
+│       └── main.yml
+├── k8s/
+│   ├── ab/
+│   │   ├── deployment-a.yaml
+│   │   ├── deployment-b.yaml
+│   │   └── service.yaml
+│   ├── base/
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   ├── blue-green/
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   ├── canary/
+│   │   ├── canary-deployment.yaml
+│   │   ├── service.yaml
+│   │   └── stable-deployment.yaml
+│   ├── rolling-update/
+│   │   ├── deployment.yaml
+│   │   └── service.yaml
+│   └── shadow/
+│       ├── service.yaml
+│       ├── shadow-deployment.yaml
+│       └── stable-deployment.yaml
+├── postman/
+│   └── ACEest Fitness & Gym.postman_collection.json
 ├── tests/
-│   ├── conftest.py               # Pytest fixtures
-│   └── test_app.py               # Test suite (58 tests)
-└── .github/
-    └── workflows/
-        └── main.yml              # GitHub Actions CI/CD pipeline
+│   ├── conftest.py
+│   └── test_app.py
 ```
 
 ---
@@ -71,6 +107,27 @@ docker run -p 5000:5000 aceest-fitness
 ```bash
 python -m pytest -v
 ```
+
+---
+
+## Postman Collection
+
+Import the collection from `postman/ACEest Fitness & Gym.postman_collection.json` into Postman to try the API quickly.
+
+---
+
+## Kubernetes Manifests
+
+Kubernetes YAMLs are under `k8s/`:
+
+- **`k8s/base/`**: baseline `Deployment` + `Service`
+- **`k8s/rolling-update/`**: rolling update strategy
+- **`k8s/blue-green/`**: blue/green switch pattern
+- **`k8s/canary/`**: stable + canary deployments
+- **`k8s/ab/`**: A/B deployments
+- **`k8s/shadow/`**: stable + shadow deployments
+
+The Jenkins pipeline deploys by updating the image for the `deployment/aceest-fitness` resource (see `Jenkinsfile`).
 
 ---
 
@@ -254,9 +311,19 @@ Triggered on every push and pull request to `main`. Four stages:
 
 ### Jenkins
 
-Four stages: Checkout → Install Dependencies → Lint → Test
+Stages:
 
-> Docker Build and Test are handled exclusively by GitHub Actions. Jenkins focuses on code quality - linting and testing
+1. **Checkout**
+2. **Install Dependencies**
+3. **Lint**
+4. **Test**
+5. **SonarQube Analysis**
+6. **Build Docker Image**
+7. **Login to Docker Hub**
+8. **Push Docker Image**
+9. **Deploy to Kubernetes**
+
+On pipeline failure, Jenkins rolls back the Kubernetes deployment to the last stable revision.
 
 ---
 
@@ -264,11 +331,19 @@ Four stages: Checkout → Install Dependencies → Lint → Test
 
 ### Jenkins
 - Jenkins is run locally using Docker with the `jenkins/jenkins:lts` image
-- Python 3 and pip must be installed inside the Jenkins container:
+- Required tooling must be available inside the Jenkins environment:
+  - Python + pip (to run lint/tests)
+  - Docker CLI (to build/push images)
+  - SonarScanner (to run SonarQube analysis)
+  - kubectl access (to deploy/rollback)
+- If you run Jenkins via Docker, you may need to install Python 3 and pip inside the Jenkins container:
 ```bash
   docker exec -it --user root jenkins apt-get install -y python3 python3-pip
 ```
 - This is a one-time setup step and does not need to be repeated unless the container is recreated
+- Jenkins credentials expected by the pipeline:
+  - `sonar-token` (Secret text)
+  - `dockerhub-credentials` (Username + Password)
 
 ### Docker
 - A `.dockerignore` file is included to prevent the local `aceest_fitness.db` from being copied into the image, ensuring a clean database is created on every container start
@@ -288,5 +363,6 @@ Four stages: Checkout → Install Dependencies → Lint → Test
 | v2.2.4  | BMI, workout logging, body metrics, client summary        |
 | v3.1.2  | Login system, user registration, AI program generator     |
 | v3.2.4  | Membership status and end date, membership check endpoint |
+| v4.1.x  | Jenkins: SonarQube analysis, Docker push, Kubernetes deploy with rollback |
 
 > v2.1.2 and v3.0.1 are stability releases with no code changes — no commits exist for these versions.
